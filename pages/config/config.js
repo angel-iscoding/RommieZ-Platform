@@ -277,7 +277,7 @@ async function saveProfile() {
 function showPensionModal(pension = null) {
     if (pension) {
         // Editing existing pension
-        modalTitle.textContent = 'Editar Pensión';
+        modalTitle.textContent = 'Edit RoomZ';
         pensionTitleInput.value = pension.title;
         pensionPriceInput.value = pension.price;
         pensionImageInput.value = pension.image;
@@ -285,7 +285,7 @@ function showPensionModal(pension = null) {
         isAddingPension = false;
     } else {
         // Adding new pension
-        modalTitle.textContent = 'Nueva Pensión';
+        modalTitle.textContent = 'New RoomZ';
         pensionTitleInput.value = '';
         pensionPriceInput.value = '';
         pensionImageInput.value = 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800';
@@ -311,7 +311,7 @@ function editPension(pensionId) {
 
 async function savePension() {
     const pensionData = {
-        title: pensionTitleInput.value || 'Nueva Pensión',
+        title: pensionTitleInput.value || 'New RoomZ',
         price: pensionPriceInput.value || '$0',
         image: pensionImageInput.value || 'https://images.pexels.com/photos/1571460/pexels-photo-1571460.jpeg?auto=compress&cs=tinysrgb&w=800',
         rating: 5.0
@@ -343,7 +343,7 @@ async function savePension() {
         
     } catch (error) {
         console.error('Error saving pension:', error);
-        alert('Error al guardar la pensión. Inténtalo de nuevo.');
+        alert('Error to save the RoomZ. Try again.');
     }
 }
 
