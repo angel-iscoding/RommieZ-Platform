@@ -1,248 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="index.css">
-    <title>Home page</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+    <title>RoomieZ - Dashboard</title>
 </head>
 
+
 <body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Logo/Home Button -->
+            <button class="logo-btn" id="RoomZBtn" title="Ir al inicio">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
 
-    <header>
+            <!-- Search/Filter -->
 
-        <div class="profile_button">
-            <nav class="button_profile">
-                <a href="view-profile" id="butt_profile">
-                    <img id="svg" src="Simplification.svg" alt="">
-                </a>
-            </nav>
-        </div>
-
-        <div>
-            <div id="guide">
-                <div class="div_guide">
-                    <button class="guide_button">
-                        <a class="guide_href" href="view-1.html">Todo</a>
-                    </button>
-                </div>
-                <div class="div_guide Apartastudios">
-                    <button class="guide_button">
-                        <a class="guide_href" href="view-2.html">Apartastudios</a>
-                    </button>
-                </div>
-                <div class="div_guide">
-                    <button class="guide_button">
-                        <a class="guide_href" href="view-3.html">Roomies</a>
-                    </button>
-                </div>
-                <div class="div_guide">
-                    <button class="guide_button">
-                        <a class="guide_href" href="view-4.html">Conjuntos</a>
-                    </button>
-                </div>
-                <div class="search">
-                    <input type="text" class="search__input" placeholder="Explore places">
-                    <button class="search__button">
-                        <svg class="search__icon" aria-hidden="true" viewBox="0 0 24 24">
-                            <g>
-                                <path d="M21.53 20.47l-3.66-3.66C19.195 15.24 20 13.214 20 11c0- <p>⭐ 4.97</p>-4.03-9-9-9s-9 4.03-9 9 4.03 9 9 9c2.215 0 4.24-.804 5808-2.13l3.66 3.66c.147.146.34.22.53.22s.385-.073.53-.22c.295-.293.295-.767.002-1.06zM3.5 11c0-4.135 3.365-7.5 7.5-7.5s7.53.365 7.5 7.5-3.365 7.5-7.5 7.5-7.5-3.365-7.5-7.5z">
-                                </path>
-                            </g>
-                        </svg>
-                    </button>
+            <div class="search-filter">
+                <input 
+                    type="text" 
+                    class="filter-input" 
+                    id="filterInput"
+                    placeholder="Buscar RoomZ por título, ubicación o precio..."
+                
+                >
+                <div class="filter-dropdown" id="filterDropdown">
+                    <div class="filter-option" data-filter="all">All RoomZ</div>
+                    <div class="filter-option" data-filter="available">disponibility</div>
+                    <div class="filter-option" data-filter="price-low">price: low to high</div>
+                    <div class="filter-option" data-filter="price-high">Price: high to low</div>
                 </div>
             </div>
-        </div>
 
-        <div>
-            <nav id="nav">
-                <ul class="links">
-                    <li class="open_submenu">
-                        <a class="link" id="Menu" href="#">Menu <i class="fa-solid fa-chevron-down"></i>
-                        </a>
-                        <div class="submenu">
-                            <ul class="links">
-                                <li class="open_submenu"><a href="#" class="link">User settings</a></li>
-                                <li class="open_submenu"><a href="#" class="link">Login</a></li>
-                                <li class="open_submenu"><a href="#" class="link">Logout</a></li>
-                            </ul>
-                        </div>
-                    </li>
-                </ul>
-            </nav>
+            <!-- Menu Button -->
+            <button aria-label="menubtn" class="menu-btn" id="menuBtn">
+                <div class="menu-icon">
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-item" id="loginBtn">Login</div>
+                    <div class="dropdown-item" id="configBtn">Config</div>
+                    <div class="dropdown-item" id="logoutBtn">Logout</div>
+                </div>
+            </button>
         </div>
-
     </header>
-    
-    <main>
 
-        <section class="section">
-            <h2>Near the UB university </h2>
-            <div class="section_div">
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p></div></div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-            </div>    
-        </section>
-
-        <section class="section">
-            <h2>Near the UB university </h2>
-            <div class="section_div">
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <section class="section">
-            <h2>Near the UB university </h2>
-            <div class="section_div">
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-                <div class="departament">
-                    <div class="image">
-                        <img src="placeholder.jpg" alt="" >
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="size-6">
-                            <path stroke-linecap="round" stroke-linejoin="round" d="m2.25 15.75 5.159-5.159a2.25 2.25 0 0 1 3.182 0l5.159 5.159m-1.5-1.5 1.409-1.409a2.25 2.25 0 0 1 3.182 0l2.909 2.909m-18 3.75h16.5a1.5 1.5 0 0 0 1.5-1.5V6a1.5 1.5 0 0 0-1.5-1.5H3.75A1.5 1.5 0 0 0 2.25 6v12a1.5 1.5 0 0 0 1.5 1.5Zm10.5-11.25h.008v.008h-.008V8.25Zm.375 0a.375.375 0 1 1-.75 0 .375.375 0 0 1 .75 0Z" />
-                        </svg>
-                    </div>
-                    <div class="text">
-                        <p class="dark">Title of the departament</p>
-                        <p>$999.000 by month</p> <p>⭐ 4.97</p>
-                    </div>
-                </div>
-            </div>
-        </section>
-    </main>
-    <footer>
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">RoomieZ</h1>
         
-    </footer>
-<script src="script.js"></script>
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading available rooms</p>
+        </div>
+
+        <!-- Publications Grid -->
+        <div class="publications-grid" id="publicationsGrid">
+            <!-- The Pubs are going to dymamic load here -->
+        </div>
+
+        <div class="publications-grid" id="publicationsGrid2">
+            <!-- The Pubs are going to dymamic load here -->
+        </div>
+    </main>
+    <script type="module" src="index.js"></script>
 </body>
 </html>
