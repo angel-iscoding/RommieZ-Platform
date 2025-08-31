@@ -1,3 +1,31 @@
+// ===== VERIFICACIÓN DE AUTENTICACIÓN =====
+
+// Verificar autenticación al cargar la página
+document.addEventListener('DOMContentLoaded', function() {
+    // Cargar sesión desde localStorage
+    const hasSession = window.RoomZAuth?.loadSession?.() || loadSession();
+    
+    if (!hasSession || !window.RoomZAuth?.isAuthenticated?.()) {
+        alert('Debes iniciar sesión para acceder a la configuración');
+        window.location.href = '../../index.html';
+        return;
+    }
+    
+    // Verificar parámetros de URL para seguridad adicional
+    const urlParams = new URLSearchParams(window.location.search);
+    const requestedUserId = urlParams.get('userId');
+    const currentUserId = window.RoomZAuth?.getCurrentUserId?.() || getCurrentUserId();
+    
+    if (requestedUserId && parseInt(requestedUserId) !== currentUserId) {
+        alert('No tienes permiso para acceder a esta configuración');
+        window.location.href = '../../index.html';
+        return;
+    }
+    
+    // Si llegamos aquí, el usuario está autenticado correctamente
+    initializeConfig();
+});
+
 // Configuración de la API
 const API_BASE_URL = 'http://localhost:3010/api/V1';
 
@@ -86,10 +114,10 @@ const roomzPriceInput = document.getElementById('roomzPrice');
 const roomzTypeInput = document.getElementById('roomzType');
 const roomzAvailableInput = document.getElementById('roomzAvailable');
 
-// Inicialización
-document.addEventListener('DOMContentLoaded', function() {
-    // Obtener ID del usuario de la URL o localStorage
-    currentUserId = getUserIdFromUrl() || getUserIdFromStorage();
+// Función de inicialización de configuración
+function initializeConfig() {
+    // Obtener ID del usuario autenticado
+    currentUserId = window.RoomZAuth?.getCurrentUserId?.() || getCurrentUserId();
     
     if (!currentUserId) {
         showError('No se encontró el ID del usuario. Por favor, inicia sesión.');
@@ -98,7 +126,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
     init();
     setupEventListeners();
-});
+}
 
 // Función de debug para verificar elementos del DOM
 function debugDOMElements() {

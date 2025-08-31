@@ -147,7 +147,8 @@ async function initializePage() {
 // Obtener ID del Roomz de la URL
 function getRoomzIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-    return urlParams.get('id');
+    // Soporte para ambos parámetros: 'id' (legacy) y 'roomId' (nuevo)
+    return urlParams.get('roomId') || urlParams.get('id');
 }
 
 // Cargar datos del Roomz

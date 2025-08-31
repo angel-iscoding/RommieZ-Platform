@@ -10,7 +10,7 @@
     <div class="container">
       <!-- Header -->
       <header class="header">
-        <div class="logo">
+        <div class="logo" onclick="goToIndex()" style="cursor: pointer;" title="Ir al inicio">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -49,7 +49,18 @@
             </svg>
           </button>
         </div>
-        <button class="menu-btn">☰</button>
+        <button class="menu-btn" id="menuBtn">
+          <div class="menu-icon">
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+            <div class="menu-line"></div>
+          </div>
+          <div class="dropdown-menu" id="dropdownMenu">
+            <div class="dropdown-item" id="loginBtn">Login</div>
+            <div class="dropdown-item" id="configBtn">Config</div>
+            <div class="dropdown-item" id="logoutBtn">Logout</div>
+          </div>
+        </button>
       </header>
 
       <!-- Loading State -->
@@ -335,6 +346,84 @@
       </div>
     </div>
 
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Login</h2>
+                <button class="close-btn" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label for="loginEmail">Email</label>
+                        <input type="email" id="loginEmail" required>
+                        <div class="error-message" id="emailError"></div>
+                        <div class="success-message" id="emailSuccess"></div>
+                    </div>
+                    <div class="form-group" id="passwordSection" style="display: none;">
+                        <label for="loginPassword">Password</label>
+                        <input type="password" id="loginPassword" required>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <button type="submit" id="loginSubmitBtn">Continue</button>
+                </form>
+                <div class="modal-footer">
+                    <p>Don't have an account? <a href="#" id="switchToRegister">Register</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Register</h2>
+                <button class="close-btn" id="closeRegisterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="registerForm">
+                    <div class="form-group">
+                        <label for="firstName">First Name</label>
+                        <input type="text" id="firstName" required>
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="lastName">Last Name</label>
+                        <input type="text" id="lastName" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="birthDate">Birth Date</label>
+                        <input type="date" id="birthDate" required>
+                        <div class="error-message" id="birthDateError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="city">City</label>
+                        <input type="text" id="city" value="Barranquilla" required>
+                        <div class="error-message" id="cityError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerEmail">Email</label>
+                        <input type="email" id="registerEmail" required>
+                        <div class="error-message" id="registerEmailError"></div>
+                    </div>
+                    <div class="form-group">
+                        <label for="registerPassword">Password</label>
+                        <input type="password" id="registerPassword" required>
+                        <div class="error-message" id="registerPasswordError"></div>
+                    </div>
+                    <button type="submit" id="registerSubmitBtn">Register</button>
+                </form>
+                <div class="modal-footer">
+                    <p>Already have an account? <a href="#" id="switchToLogin">Login</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../scripts/auth.js"></script>
+    <script src="details-auth.js"></script>
     <script src="details.js"></script>
   </body>
 </html>
