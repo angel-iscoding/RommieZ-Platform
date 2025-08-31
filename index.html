@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+    <title>RoomieZ - Dashboard</title>
+</head>
+
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Logo/Home Button -->
+            <button class="logo-btn" id="RoomZBtn" title="Ir al inicio">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+
+            <!-- Search/Filter -->
+
+            <div class="search-filter">
+                <input 
+                    type="text" 
+                    class="filter-input" 
+                    id="filterInput"
+                    placeholder="Buscar RoomZ por título, ubicación o precio..."
+                
+                >
+                <div class="filter-dropdown" id="filterDropdown">
+                    <div class="filter-option" data-filter="all">All RoomZ</div>
+                    <div class="filter-option" data-filter="available">disponibility</div>
+                    <div class="filter-option" data-filter="price-low">price: low to high</div>
+                    <div class="filter-option" data-filter="price-high">Price: high to low</div>
+                </div>
+            </div>
+
+            <!-- Menu Button -->
+            <button aria-label="menubtn" class="menu-btn" id="menuBtn">
+                <div class="menu-icon">
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-item" id="loginBtn">Login</div>
+                    <div class="dropdown-item" id="configBtn">Config</div>
+                    <div class="dropdown-item" id="logoutBtn">Logout</div>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">RoomieZ</h1>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading available rooms</p>
+        </div>
+
+        <!-- Publications Grid -->
+        <div class="publications-grid" id="publicationsGrid">
+            <!-- The Pubs are going to dymamic load here -->
+        </div>
+
+        <div class="publications-grid" id="publicationsGrid2">
+            <!-- The Pubs are going to dymamic load here -->
+        </div>
+    </main>
+    <script type="module" src="index.js"></script>
+</body>
+</html>
