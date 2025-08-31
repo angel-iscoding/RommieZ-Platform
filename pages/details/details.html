@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="details.css" />
+    <title>RoomieZ - Detalles del Roomz</title>
+  </head>
+  <body>
+    <div class="container">
+      <!-- Header -->
+      <header class="header">
+        <div class="logo">
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke-width="1.5"
+            stroke="currentColor"
+            class="size-6"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="m2.25 12 8.954-8.955c.44-.439 1.152-.439 1.591 0L21.75 12M4.5 9.75v10.125c0 .621.504 1.125 1.125 1.125H9.75v-4.875c0-.621.504-1.125 1.125-1.125h2.25c.621 0 1.125.504 1.125 1.125V21h4.125c.621 0 1.125-.504 1.125-1.125V9.75M8.25 21h8.25"
+            />
+          </svg>
+        </div>
+        <div class="search-container">
+          <input
+            type="text"
+            class="search-input"
+            placeholder="Explora lugares"
+          />
+          <button aria-label="search-btn" class="search-btn">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke-width="1.5"
+              stroke="currentColor"
+              class="size-6"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z"
+              />
+            </svg>
+          </button>
+        </div>
+        <button class="menu-btn">☰</button>
+      </header>
+
+      <!-- Loading State -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Cargando información del Roomz...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error" class="error hidden">
+        <h2>Error al cargar la información</h2>
+        <p id="error-message">No se pudo cargar la información del Roomz.</p>
+        <div class="error-actions">
+          <button onclick="location.reload()" class="retry-btn">Intentar de nuevo</button>
+          <button onclick="testAPIManually()" class="test-api-btn">Probar API</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div id="main-content" class="hidden">
+        <!-- Main Title -->
+        <h1 id="roomz-title" class="main-title">
+          Cargando título...
+        </h1>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+          <!-- Left Column -->
+          <div class="left-column">
+            <!-- Image Gallery -->
+            <div class="image-gallery">
+              <div class="image-placeholder large">
+                <div class="camera-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Property Info -->
+            <div class="property-info">
+              <h2 id="roomz-subtitle">Cargando subtítulo...</h2>
+              <p id="roomz-details" class="property-details">Cargando detalles...</p>
+
+              <!-- Host Info -->
+              <div class="host-info">
+                <div class="host-avatar">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                  </svg>
+                </div>
+                <div class="host-details">
+                  <h3 id="host-name">Cargando anfitrión...</h3>
+                  <p id="host-experience">Cargando experiencia...</p>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="description">
+                <p id="roomz-description">
+                  Cargando descripción...
+                </p>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="contact-info">
+                <h3>Información de contacto</h3>
+                <div id="contact-links" class="contact-links">
+                  <p class="no-contacts">Cargando contactos...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="right-column">
+            <!-- Booking Card -->
+            <div class="booking-card">
+              <div class="price-section">
+                <span id="roomz-price" class="price">$0 COP</span>
+                <span class="price-period">por mes</span>
+              </div>
+
+              <div class="booking-form">
+                <div class="date-inputs">
+                  <div class="date-input">
+                    <label class="input-label">Llegada</label>
+                    <input
+                      aria-label="arrive"
+                      type="date"
+                      class="input-value"
+                      id="checkin"
+                    />
+                  </div>
+                  <div class="date-input">
+                    <label class="input-label">Salida</label>
+                    <input
+                      aria-label="go-out"
+                      type="date"
+                      class="input-value"
+                      id="checkout"
+                    />
+                  </div>
+                </div>
+                <div class="guest-input" onclick="toggleGuestDropdown()">
+                  <div>
+                    <label class="input-label">HUÉSPEDES</label>
+                    <span class="input-value" id="guest-display">1 huésped</span>
+                  </div>
+                  <div class="dropdown-arrow">▼</div>
+                  <div class="guest-dropdown" id="guest-dropdown">
+                    <div class="guest-counter">
+                      <span>huéspedes</span>
+                      <div class="counter-controls">
+                        <button
+                          class="counter-btn"
+                          onclick="changeGuests(-1)"
+                          id="decrease-btn"
+                        >
+                          −
+                        </button>
+                        <span id="guest-count">1</span>
+                        <button class="counter-btn" onclick="changeGuests(1)">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="reserve-btn">Reservar</button>
+              <p class="no-charge-text">No pagas nada por el momento</p>
+
+              <div class="price-breakdown">
+                <div class="price-row">
+                  <span id="price-breakdown-text">$0 COP x 1 mes</span>
+                  <span id="price-breakdown-total">$0 COP</span>
+                </div>
+                <div class="price-row">
+                  <span>Precio del servicio</span>
+                  <span>$0 COP</span>
+                </div>
+                <div class="price-row total">
+                  <span>Total</span>
+                  <span id="price-total">$0 COP</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+              <div class="reviews-header">
+                <div class="star-icon">⭐</div>
+                <span class="rating">4.8</span>
+                <span class="review-count">(124 reseñas)</span>
+              </div>
+              <div class="review-item">Excelente ubicación</div>
+              <div class="review-item">Muy buena atención</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="details.js"></script>
+  </body>
+</html>
