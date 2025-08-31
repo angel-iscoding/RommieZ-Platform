@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Configuración de Usuario - RoomieZ</title>
+    <link rel="stylesheet" href="config.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+                <h1 class="sidebar-title">Configuración</h1>
+                <div class="sidebar-item active" data-section="profile">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>Mi Perfil</span>
+                </div>
+                <div class="sidebar-item" data-section="contacts">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span>Contactos</span>
+                </div>
+                <div class="sidebar-item" data-section="roomz">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                    </svg>
+                    <span>Mis RoomZ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Cargando configuración...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error hidden">
+                <h3>Error al cargar la configuración</h3>
+                <p id="errorMessage"></p>
+                <button id="retryBtn" class="btn-primary">Reintentar</button>
+            </div>
+
+            <!-- Content -->
+            <div id="content" class="content hidden">
+                <!-- Profile Section -->
+                <div id="profile-section" class="section active">
+                    <div class="section-header">
+                        <h2>Mi Perfil</h2>
+                        <button id="editProfileBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Editar
+                        </button>
+                    </div>
+
+                    <div class="profile-content">
+                        <!-- Profile Image -->
+                        <div class="profile-image-container">
+                            <div class="profile-image-wrapper">
+                                <img id="profileImage" src="" alt="Profile" class="profile-image">
+                                <div id="profileImagePlaceholder" class="profile-image-placeholder">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="username" class="username"></p>
+                        </div>
+
+                        <!-- Profile Info -->
+                        <div class="profile-info">
+                            <div class="info-grid">
+                                <div class="info-field">
+                                    <label>Nombre Completo:</label>
+                                    <div id="fullNameDisplay" class="info-value"></div>
+                                    <input aria-label="Nombre completo" type="text" id="fullNameInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Ciudad:</label>
+                                    <div id="cityDisplay" class="info-value"></div>
+                                    <input aria-label="Ciudad" type="text" id="cityInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Email:</label>
+                                    <div id="emailDisplay" class="info-value"></div>
+                                    <input aria-label="Email" type="email" id="emailInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Fecha de Nacimiento:</label>
+                                    <div id="birthDateDisplay" class="info-value"></div>
+                                    <input aria-label="Fecha de nacimiento" type="date" id="birthDateInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Rol:</label>
+                                    <div id="roleDisplay" class="info-value"></div>
+                                    <select id="roleInput" class="info-input hidden">
+                                        <option value="student">Estudiante</option>
+                                        <option value="landlord">Arrendador</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Edit Actions -->
+                            <div id="editActions" class="edit-actions hidden">
+                                <button id="cancelEditBtn" class="btn-cancel">Cancelar</button>
+                                <button id="saveProfileBtn" class="btn-primary">Guardar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacts Section -->
+                <div id="contacts-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>Información de Contacto</h2>
+                        <button id="editContactsBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Editar
+                        </button>
+                    </div>
+
+                    <div class="contacts-content">
+                        <div class="info-grid">
+                            <div class="info-field">
+                                <label>Teléfono:</label>
+                                <div id="phoneDisplay" class="info-value"></div>
+                                <input aria-label="Teléfono" type="tel" id="phoneInput" class="info-input hidden" placeholder="+57 300 123 4567">
+                            </div>
+
+                            <div class="info-field">
+                                <label>WhatsApp:</label>
+                                <div id="whatsappDisplay" class="info-value"></div>
+                                <input aria-label="WhatsApp" type="tel" id="whatsappInput" class="info-input hidden" placeholder="+57 300 123 4567">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Instagram:</label>
+                                <div id="instagramDisplay" class="info-value"></div>
+                                <input aria-label="Instagram" type="url" id="instagramInput" class="info-input hidden" placeholder="https://www.instagram.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Facebook:</label>
+                                <div id="facebookDisplay" class="info-value"></div>
+                                <input aria-label="Facebook" type="url" id="facebookInput" class="info-input hidden" placeholder="https://www.facebook.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Twitter:</label>
+                                <div id="twitterDisplay" class="info-value"></div>
+                                <input aria-label="Twitter" type="url" id="twitterInput" class="info-input hidden" placeholder="https://www.twitter.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>LinkedIn:</label>
+                                <div id="linkedinDisplay" class="info-value"></div>
+                                <input aria-label="LinkedIn" type="url" id="linkedinInput" class="info-input hidden" placeholder="https://www.linkedin.com/in/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>TikTok:</label>
+                                <div id="tiktokDisplay" class="info-value"></div>
+                                <input aria-label="TikTok" type="url" id="tiktokInput" class="info-input hidden" placeholder="https://www.tiktok.com/@usuario">
+                            </div>
+                        </div>
+
+                        <!-- Edit Actions -->
+                        <div id="editContactsActions" class="edit-actions hidden">
+                            <button id="cancelContactsBtn" class="btn-cancel">Cancelar</button>
+                            <button id="saveContactsBtn" class="btn-primary">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RoomZ Section -->
+                <div id="roomz-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>Mis RoomZ</h2>
+                        <button id="addRoomzBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Publicar Nuevo
+                        </button>
+                    </div>
+
+                    <div id="roomzGrid" class="roomz-grid">
+                        <!-- RoomZ will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing/adding RoomZ -->
+    <div id="roomzModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalTitle">Editar RoomZ</h3>
+                <button aria-label="cerrar" id="closeModalBtn" class="close-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-field">
+                    <label for="roomzTitle">Título:</label>
+                    <input type="text" id="roomzTitle" placeholder="Título del RoomZ" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzSubtitle">Subtítulo:</label>
+                    <input type="text" id="roomzSubtitle" placeholder="Subtítulo descriptivo" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzDetails">Detalles:</label>
+                    <input type="text" id="roomzDetails" placeholder="Servicios incluidos" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzDescription">Descripción:</label>
+                    <textarea id="roomzDescription" placeholder="Descripción detallada del RoomZ" required></textarea>
+                </div>
+                <div class="form-field">
+                    <label for="roomzAddress">Dirección:</label>
+                    <input type="text" id="roomzAddress" placeholder="Dirección completa" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzPrice">Precio (COP):</label>
+                    <input type="number" id="roomzPrice" placeholder="250000" min="0" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzType">Tipo:</label>
+                    <select id="roomzType" required>
+                        <option value="studio">Estudio</option>
+                        <option value="apartment">Apartamento</option>
+                        <option value="residential_complex">Conjunto Residencial</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                    <label for="roomzAvailable">Disponible:</label>
+                    <select id="roomzAvailable" required>
+                        <option value="true">Sí</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button id="cancelRoomzBtn" class="btn-cancel">Cancelar</button>
+                <button id="saveRoomzBtn" class="btn-primary">Guardar</button>
+                <button id="deleteRoomzBtn" class="btn-danger hidden">Eliminar</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="config.js"></script>
+</body>
+</html>
