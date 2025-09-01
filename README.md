@@ -111,7 +111,6 @@ To run the application with full functionality:
 
 1. **Start the API server** (separate from this frontend)
 2. **Configure CORS** if running on different ports
-3. **Set up the database** according to the `db.json` structure
 
 ## 🎨 User Interface
 
@@ -148,14 +147,6 @@ To run the application with full functionality:
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
 5. Open a Pull Request
-
-## 📄 License
-
-This project is licensed under the ISC License - see the [LICENSE](LICENSE) file for details.
-
-## 👥 Authors
-
-- **Angel** - *Initial work* - [angel-iscoding](https://github.com/angel-iscoding)
 
 ## 🙏 Acknowledgments
 
