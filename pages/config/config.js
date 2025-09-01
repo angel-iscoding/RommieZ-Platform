@@ -57,7 +57,7 @@ const cancelEditBtn = document.getElementById('cancelEditBtn');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
 const editActionsEl = document.getElementById('editActions');
 
-// Elementos del perfil
+// Profile elements
 const profileImageEl = document.getElementById('profileImage');
 const profileImagePlaceholder = document.getElementById('profileImagePlaceholder');
 const usernameEl = document.getElementById('username');
@@ -103,7 +103,7 @@ const saveRoomzBtn = document.getElementById('saveRoomzBtn');
 const deleteRoomzBtn = document.getElementById('deleteRoomzBtn');
 const modalTitle = document.getElementById('modalTitle');
 
-// Formulario de RoomZ
+// RoomZ form
 const roomzTitleInput = document.getElementById('roomzTitle');
 const roomzSubtitleInput = document.getElementById('roomzSubtitle');
 const roomzDetailsInput = document.getElementById('roomzDetails');
@@ -219,16 +219,16 @@ async function loadUserContacts(userId) {
             return null;
         }
     } catch (error) {
-        console.error('Error al cargar contactos:', error);
+        console.error('Error loading contacts:', error);
         return null;
     }
 }
 
-// Cargar RoomZ del usuario
+// Load RoomZ of the user
 async function loadUserRoomz(userId) {
     try {
         const response = await fetch(`${API_BASE_URL}/roomz/user/${userId}`);
-        
+
         
         if (response.status === 404) {
             return [];
@@ -258,12 +258,12 @@ async function loadUserRoomz(userId) {
             }
         }
     } catch (error) {
-        console.error('Error al cargar RoomZ:', error);
+        console.error('Error loading RoomZ:', error);
         return [];
     }
 }
 
-// Actualizar datos del usuario
+// Update user data
 async function updateUserData(userId, userData) {
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}`, {
@@ -281,12 +281,12 @@ async function updateUserData(userId, userData) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al actualizar usuario:', error);
-        throw new Error(`Error al actualizar usuario: ${error.message}`);
+        console.error('Error updating user data:', error);
+        throw new Error(`Error updating user data: ${error.message}`);
     }
 }
 
-// Actualizar contactos del usuario
+// Update user contacts
 async function updateUserContacts(userId, contactsData) {
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}/contacts`, {
@@ -304,12 +304,12 @@ async function updateUserContacts(userId, contactsData) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al actualizar contactos:', error);
-        throw new Error(`Error al actualizar contactos: ${error.message}`);
+        console.error('Error updating contacts:', error);
+        throw new Error(`Error updating contacts: ${error.message}`);
     }
 }
 
-// Crear nuevo RoomZ
+// Create new RoomZ
 async function createRoomz(roomzData) {
     try {
         const response = await fetch(`${API_BASE_URL}/roomz`, {
@@ -327,12 +327,12 @@ async function createRoomz(roomzData) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al crear RoomZ:', error);
-        throw new Error(`Error al crear RoomZ: ${error.message}`);
+        console.error('Error creating RoomZ:', error);
+        throw new Error(`Error creating RoomZ: ${error.message}`);
     }
 }
 
-// Actualizar RoomZ existente
+// Update existing RoomZ
 async function updateRoomz(roomzId, roomzData) {
     try {
         const response = await fetch(`${API_BASE_URL}/roomz/${roomzId}`, {
@@ -350,12 +350,12 @@ async function updateRoomz(roomzId, roomzData) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al actualizar RoomZ:', error);
-        throw new Error(`Error al actualizar RoomZ: ${error.message}`);
+        console.error('Error updating RoomZ:', error);
+        throw new Error(`Error updating RoomZ: ${error.message}`);
     }
 }
 
-// Eliminar RoomZ
+// Delete RoomZ
 async function deleteRoomz(roomzId) {
     try {
         const response = await fetch(`${API_BASE_URL}/roomz/${roomzId}`, {
@@ -369,98 +369,98 @@ async function deleteRoomz(roomzId) {
         const data = await response.json();
         return data;
     } catch (error) {
-        console.error('Error al eliminar RoomZ:', error);
-        throw new Error(`Error al eliminar RoomZ: ${error.message}`);
+        console.error('Error deleting RoomZ:', error);
+        throw new Error(`Error deleting RoomZ: ${error.message}`);
     }
 }
 
-// ==================== FUNCIONES DE RENDERIZADO ====================
+// ==================== RENDER FUNCTIONS ====================
 
-// Renderizar perfil del usuario
+// Render user profile
 function renderUserProfile() {
     const currentUser = window.RoomZAuth?.currentUser;
     if (!currentUser) return;
     
     // Username
-    usernameEl.textContent = currentUser.username || 'Usuario';
+    usernameEl.textContent = currentUser.username || 'User';
     
-    // Nombre completo
+    // Full name
     const fullName = `${currentUser.first_name || ''} ${currentUser.middle_name || ''} ${currentUser.last_name || ''}`.trim();
-    fullNameDisplay.textContent = fullName || 'Sin nombre';
+    fullNameDisplay.textContent = fullName || 'No name';
     fullNameInput.value = fullName;
     
-    // Ciudad
-    cityDisplay.textContent = currentUser.city || 'Sin especificar';
+    // City
+    cityDisplay.textContent = currentUser.city || 'No specified';
     cityInput.value = currentUser.city || '';
     
     // Email
-    emailDisplay.textContent = currentUser.email || 'Sin email';
+    emailDisplay.textContent = currentUser.email || 'No email';
     emailInput.value = currentUser.email || '';
     
-    // Fecha de nacimiento
+    // Birth date
     if (currentUser.birthdate) {
         const birthDate = new Date(currentUser.birthdate);
         const formattedDate = birthDate.toLocaleDateString('es-ES');
         birthDateDisplay.textContent = formattedDate;
         birthDateInput.value = currentUser.birthdate.split('T')[0];
     } else {
-        birthDateDisplay.textContent = 'Sin especificar';
+        birthDateDisplay.textContent = 'No specified';
         birthDateInput.value = '';
     }
     
     // Rol
-    const roleText = currentUser.role === 'landlord' ? 'Arrendador' : 'Estudiante';
+    const roleText = currentUser.role === 'landlord' ? 'Landlord' : 'Student';
     roleDisplay.textContent = roleText;
     roleInput.value = currentUser.role || 'student';
 }
 
-// Renderizar contactos del usuario
+// Render user contacts
 function renderUserContacts() {
     if (!currentContacts) {
-        // Mostrar mensaje de que no hay contactos
-        phoneDisplay.textContent = 'Sin especificar';
-        whatsappDisplay.textContent = 'Sin especificar';
-        instagramDisplay.textContent = 'Sin especificar';
-        facebookDisplay.textContent = 'Sin especificar';
-        twitterDisplay.textContent = 'Sin especificar';
-        linkedinDisplay.textContent = 'Sin especificar';
-        tiktokDisplay.textContent = 'Sin especificar';
+        // Show message that there are no contacts
+        phoneDisplay.textContent = 'No specified';
+        whatsappDisplay.textContent = 'No specified';
+        instagramDisplay.textContent = 'No specified';
+        facebookDisplay.textContent = 'No specified';
+        twitterDisplay.textContent = 'No specified';
+        linkedinDisplay.textContent = 'No specified';
+        tiktokDisplay.textContent = 'No specified';
         return;
     }
     
     // Phone
-    phoneDisplay.textContent = currentContacts.phone_number || 'Sin especificar';
+    phoneDisplay.textContent = currentContacts.phone_number || 'No specified';
     phoneInput.value = currentContacts.phone_number || '';
     
     // WhatsApp
-    whatsappDisplay.textContent = currentContacts.whatsapp_number || 'Sin especificar';
+    whatsappDisplay.textContent = currentContacts.whatsapp_number || 'No specified';
     whatsappInput.value = currentContacts.whatsapp_number || '';
     
     // Instagram
-    instagramDisplay.textContent = currentContacts.instagram_url ? 'Ver perfil' : 'Sin especificar';
+    instagramDisplay.textContent = currentContacts.instagram_url ? 'Show profile' : 'No specified';
     instagramInput.value = currentContacts.instagram_url || '';
     
     // Facebook
-    facebookDisplay.textContent = currentContacts.facebook_url ? 'Ver perfil' : 'Sin especificar';
+    facebookDisplay.textContent = currentContacts.facebook_url ? 'Show profile' : 'No specified';
     facebookInput.value = currentContacts.facebook_url || '';
     
     // Twitter
-    twitterDisplay.textContent = currentContacts.twitter_url ? 'Ver perfil' : 'Sin especificar';
+    twitterDisplay.textContent = currentContacts.twitter_url ? 'Show profile' : 'No specified';
     twitterInput.value = currentContacts.twitter_url || '';
     
     // LinkedIn
-    linkedinDisplay.textContent = currentContacts.linkedin_url ? 'Ver perfil' : 'Sin especificar';
+    linkedinDisplay.textContent = currentContacts.linkedin_url ? 'Show profile' : 'No specified';
     linkedinInput.value = currentContacts.linkedin_url || '';
     
     // TikTok
-    tiktokDisplay.textContent = currentContacts.tiktok_url ? 'Ver perfil' : 'Sin especificar';
+    tiktokDisplay.textContent = currentContacts.tiktok_url ? 'Show profile' : 'No specified';
     tiktokInput.value = currentContacts.tiktok_url || '';
 }
 
-// Renderizar RoomZ del usuario
+// Render RoomZ of the user
 function renderUserRoomz() {
     if (!roomzGridEl) {
-        console.error('❌ Elemento roomzGrid no encontrado en el DOM');
+        console.error('❌ Element roomzGrid not found in the DOM');
         return;
     }
     
@@ -476,8 +476,8 @@ function renderUserRoomz() {
     if (!userRoomz || userRoomz.length === 0) {
         roomzGridEl.innerHTML = `
             <div class="no-roomz">
-                <p>No tienes RoomZ publicados aún.</p>
-                <p>¡Crea tu primera publicación!</p>
+                <p>You have no RoomZ published yet.</p>
+                <p>Create your first publication!</p>
             </div>
         `;
         return;
@@ -489,12 +489,12 @@ function renderUserRoomz() {
     });
 }
 
-// Crear tarjeta de RoomZ
+// Create RoomZ card
 function createRoomzCard(roomz) {
     const card = document.createElement('div');
     card.className = 'roomz-card';
     
-    // Validar y formatear datos
+    // Validate and format data
     const title = roomz.title || 'No title';
     const subtitle = roomz.subtitle || 'No subtitle';
     const details = roomz.details || 'No details';
@@ -502,7 +502,7 @@ function createRoomzCard(roomz) {
     const address = roomz.address || 'No address';
     const price = roomz.price ? parseFloat(roomz.price).toLocaleString('es-CO') : '0';
     const typeText = getRoomzTypeText(roomz.roomz_type);
-    const availableText = roomz.is_available ? 'Disponible' : 'No disponible';
+    const availableText = roomz.is_available ? 'Available' : 'Not available';
     const availableClass = roomz.is_available ? 'available' : 'not-available';
     
     card.innerHTML = `
@@ -524,14 +524,14 @@ function createRoomzCard(roomz) {
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                Editar
+                Edit
             </button>
             <button class="btn-delete" onclick="deleteRoomzById(${roomz.id})">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <polyline points="3,6 5,6 21,6"></polyline>
                     <path d="M19,6v14a2,2,0,0,1-2,2H7a2,2,0,0,1-2-2V6m3,0V4a2,2,0,0,1,2-2h4a2,2,0,0,1,2,2V6"></path>
                 </svg>
-                Eliminar
+                Delete
             </button>
         </div>
     `;
@@ -570,7 +570,7 @@ function toggleProfileEdit() {
             Editando...
         `;
     } else {
-        // Mostrar displays, ocultar inputs
+        // Show displays, hide inputs
         fullNameDisplay.classList.remove('hidden');
         fullNameInput.classList.add('hidden');
         cityDisplay.classList.remove('hidden');
@@ -591,7 +591,7 @@ function toggleProfileEdit() {
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
-            Editar
+            Edit
         `;
     }
 }
@@ -626,10 +626,10 @@ function toggleContactsEdit() {
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
-            Editando...
+            Editing...
         `;
     } else {
-        // Mostrar displays, ocultar inputs
+        // Show displays, hide inputs
         phoneDisplay.classList.remove('hidden');
         phoneInput.classList.add('hidden');
         whatsappDisplay.classList.remove('hidden');
@@ -654,15 +654,15 @@ function toggleContactsEdit() {
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
             </svg>
-            Editar
+            Edit
         `;
     }
 }
 
-// Guardar perfil
+// Save profile
 async function saveProfile() {
     try {
-        // Obtener datos actualizados de los inputs
+        // Get updated data from inputs
         const updatedData = {
             first_name: fullNameInput.value.split(' ')[0] || '',
             middle_name: fullNameInput.value.split(' ').slice(1, -1).join(' ') || null,
@@ -673,38 +673,38 @@ async function saveProfile() {
             role: roleInput.value
         };
         
-        // Validar campos requeridos
+        // Validate required fields
         if (!updatedData.first_name || !updatedData.last_name || !updatedData.city || !updatedData.email || !updatedData.birthdate) {
-            alert('Por favor, completa todos los campos requeridos.');
+            alert('Please complete all required fields.');
             return;
         }
         
-        // Guardar en la API
+        // Save in the API
         await updateUserData(configUserId, updatedData);
         
-        // Actualizar datos locales
+        // Update local data
         if (window.RoomZAuth && window.RoomZAuth.currentUser) {
             window.RoomZAuth.currentUser = { ...window.RoomZAuth.currentUser, ...updatedData };
         }
         
-        // Re-renderizar perfil
+        // Re-render profile
         renderUserProfile();
         
         // Exit edit mode
         toggleProfileEdit();
         
-        alert('Perfil actualizado exitosamente!');
+        alert('Profile updated successfully!');
         
     } catch (error) {
-        console.error('Error al guardar perfil:', error);
-        alert(`Error al guardar el perfil: ${error.message}`);
+        console.error('Error saving profile:', error);
+        alert(`Error saving the profile: ${error.message}`);
     }
 }
 
-// Guardar contactos
+// Save contacts
 async function saveContacts() {
     try {
-        // Obtener datos actualizados de los inputs
+        // Get updated data from inputs
         const updatedContacts = {
             phone_number: phoneInput.value || null,
             whatsapp_number: whatsappInput.value || null,
@@ -722,33 +722,33 @@ async function saveContacts() {
             return;
         }
         
-        // Guardar en la API
+            // Save in the API
         await updateUserContacts(configUserId, updatedContacts);
         
-        // Actualizar datos locales
+        // Update local data
         currentContacts = { ...currentContacts, ...updatedContacts };
         
-        // Re-renderizar contactos
+        // Re-render contacts
         renderUserContacts();
         
         // Exit edit mode
         toggleContactsEdit();
         
-        alert('Contactos actualizados exitosamente!');
+        alert('Contacts updated successfully!');
         
     } catch (error) {
-        console.error('Error al guardar contactos:', error);
-        alert(`Error al guardar los contactos: ${error.message}`);
+        console.error('Error saving contacts:', error);
+        alert(`Error saving the contacts: ${error.message}`);
     }
 }
 
-// ==================== FUNCIONES DE ROOMZ ====================
+// ==================== ROOMZ FUNCTIONS ====================
 
-// Mostrar modal de RoomZ
+// Show RoomZ modal
 function showRoomzModal(roomz = null) {
     if (roomz) {
-        // Editando RoomZ existente
-        modalTitle.textContent = 'Editar RoomZ';
+        // Editing existing RoomZ
+        modalTitle.textContent = 'Edit RoomZ';
         roomzTitleInput.value = roomz.title;
         roomzSubtitleInput.value = roomz.subtitle;
         roomzDetailsInput.value = roomz.details;
@@ -763,8 +763,8 @@ function showRoomzModal(roomz = null) {
         // Show delete button
         deleteRoomzBtn.classList.remove('hidden');
     } else {
-        // Agregando nuevo RoomZ
-        modalTitle.textContent = 'Nuevo RoomZ';
+        // Adding new RoomZ
+        modalTitle.textContent = 'New RoomZ';
         roomzTitleInput.value = '';
         roomzSubtitleInput.value = '';
         roomzDetailsInput.value = '';
@@ -783,14 +783,14 @@ function showRoomzModal(roomz = null) {
     roomzModal.classList.remove('hidden');
 }
 
-// Ocultar modal de RoomZ
+// Hide RoomZ modal
 function hideRoomzModal() {
     roomzModal.classList.add('hidden');
     editingRoomzId = null;
     isAddingRoomz = false;
 }
 
-// Editar RoomZ
+// Edit RoomZ
 function editRoomz(roomzId) {
     const roomz = userRoomz.find(r => r.id === roomzId);
     if (roomz) {
@@ -798,10 +798,10 @@ function editRoomz(roomzId) {
     }
 }
 
-// Guardar RoomZ
+// Save RoomZ
 async function saveRoomz() {
     try {
-        // Obtener datos del formulario
+        // Get data from form
         const roomzData = {
             user_id: parseInt(configUserId),
             title: roomzTitleInput.value,
@@ -814,32 +814,32 @@ async function saveRoomz() {
             is_available: roomzAvailableInput.value === 'true'
         };
         
-        // Validar campos requeridos
+        // Validate required fields
         if (!roomzData.title || !roomzData.subtitle || !roomzData.details || 
             !roomzData.description || !roomzData.address || !roomzData.price) {
-            alert('Por favor, completa todos los campos requeridos.');
+            alert('Please complete all required fields.');
             return;
         }
         
         if (roomzData.price <= 0) {
-            alert('El precio debe ser mayor a 0.');
+            alert('The price must be greater than 0.');
             return;
         }
         
         if (editingRoomzId) {
-            // Actualizar RoomZ existente
+            // Update existing RoomZ
             await updateRoomz(editingRoomzId, roomzData);
             
-            // Actualizar en la lista local
+            // Update local list
             const index = userRoomz.findIndex(r => r.id === editingRoomzId);
             if (index !== -1) {
                 userRoomz[index] = { ...userRoomz[index], ...roomzData };
             }
         } else {
-            // Crear nuevo RoomZ
+            // Create new RoomZ
             const result = await createRoomz(roomzData);
             
-            // Agregar a la lista local
+            // Add to local list
             const newRoomz = {
                 id: result.id,
                 ...roomzData
@@ -847,21 +847,21 @@ async function saveRoomz() {
             userRoomz.push(newRoomz);
         }
         
-        // Re-renderizar RoomZ
+        // Re-render RoomZ
         renderUserRoomz();
         
-        // Ocultar modal
+        // Hide modal
         hideRoomzModal();
         
-        alert(editingRoomzId ? 'RoomZ actualizado exitosamente!' : 'RoomZ creado exitosamente!');
+        alert(editingRoomzId ? 'RoomZ updated successfully!' : 'RoomZ created successfully!');
         
     } catch (error) {
-        console.error('Error al guardar RoomZ:', error);
-        alert(`Error al guardar el RoomZ: ${error.message}`);
+        console.error('Error saving RoomZ:', error);
+        alert(`Error saving the RoomZ: ${error.message}`);
     }
 }
 
-// Eliminar RoomZ por ID
+// Delete RoomZ by ID
 async function deleteRoomzById(roomzId) {
             if (!confirm('Are you sure you want to delete this RoomZ? This action cannot be undone.')) {
         return;
@@ -870,26 +870,26 @@ async function deleteRoomzById(roomzId) {
     try {
         await deleteRoomz(roomzId);
         
-        // Remover de la lista local
+        // Remove from local list
         userRoomz = userRoomz.filter(r => r.id !== roomzId);
         
-        // Re-renderizar RoomZ
+        // Re-render RoomZ
         renderUserRoomz();
         
-        alert('RoomZ eliminado exitosamente!');
+        alert('RoomZ deleted successfully!');
         
     } catch (error) {
-        console.error('Error al eliminar RoomZ:', error);
-        alert(`Error al eliminar el RoomZ: ${error.message}`);
+        console.error('Error deleting RoomZ:', error);
+        alert(`Error deleting the RoomZ: ${error.message}`);
     }
 }
 
-// ==================== FUNCIONES DE NAVEGACIÓN ====================
+// ==================== NAVIGATION FUNCTIONS ====================
 
 // Change active section
 function changeSection(sectionName) {
     
-    // Ocultar todas las secciones
+    // Hide all sections
     sections.forEach(section => {
         section.classList.add('hidden');
     });
@@ -906,10 +906,10 @@ function changeSection(sectionName) {
             }
         }
     } else {
-        console.error(`❌ No se encontró la sección: ${sectionName}-section`);
+        console.error(`❌ Section not found: ${sectionName}-section`);
     }
     
-    // Actualizar sidebar
+    // Update sidebar
     sidebarItems.forEach(item => {
         item.classList.remove('active');
     });
@@ -920,7 +920,7 @@ function changeSection(sectionName) {
     }
 }
 
-// ==================== FUNCIONES DE UI ====================
+// ==================== UI FUNCTIONS ====================
 
 // Mostrar loading
 function showLoading() {
@@ -934,12 +934,12 @@ function hideLoading() {
     loadingEl.classList.add('hidden');
 }
 
-// Mostrar contenido
+// Show content
 function showContent() {
     contentEl.classList.remove('hidden');
 }
 
-// Mostrar error
+// Show error
 function showError(message) {
     loadingEl.classList.add('hidden');
     contentEl.classList.add('hidden');
@@ -950,17 +950,17 @@ function showError(message) {
     }
 }
 
-// ==================== FUNCIONES UTILITARIAS ====================
+// ==================== UTILITY FUNCTIONS ====================
 
 // Obtener texto del tipo de RoomZ
 function getRoomzTypeText(type) {
     const types = {
-        'studio': 'Estudio',
-        'apartment': 'Apartamento',
-        'residential_complex': 'Conjunto Residencial'
+        'studio': 'Studio',
+        'apartment': 'Apartment',
+        'residential_complex': 'Residential Complex'
     };
     
-    return types[type] || 'Alojamiento';
+    return types[type] || 'Accommodation';
 }
 
 // ==================== EVENT LISTENERS CONFIGURATION ====================
@@ -974,17 +974,17 @@ function setupEventListeners() {
         });
     });
     
-    // Botones del perfil
+    // Profile buttons
     editProfileBtn.addEventListener('click', toggleProfileEdit);
     cancelEditBtn.addEventListener('click', toggleProfileEdit);
     saveProfileBtn.addEventListener('click', saveProfile);
     
-    // Botones de contactos
+    // Contacts buttons
     editContactsBtn.addEventListener('click', toggleContactsEdit);
     cancelContactsBtn.addEventListener('click', toggleContactsEdit);
     saveContactsBtn.addEventListener('click', saveContacts);
     
-    // Botones de RoomZ
+    // RoomZ buttons
     addRoomzBtn.addEventListener('click', () => showRoomzModal());
     closeModalBtn.addEventListener('click', hideRoomzModal);
     cancelRoomzBtn.addEventListener('click', hideRoomzModal);
@@ -999,14 +999,14 @@ function setupEventListeners() {
     // Retry button
     retryBtn.addEventListener('click', init);
     
-    // Cerrar modal al hacer clic fuera
+    // Close modal when clicking outside
     roomzModal.addEventListener('click', (e) => {
         if (e.target === roomzModal) {
             hideRoomzModal();
         }
     });
     
-    // Cerrar modal con tecla Escape
+    // Close modal with Escape key
     document.addEventListener('keydown', (e) => {
         if (e.key === 'Escape' && !roomzModal.classList.contains('hidden')) {
             hideRoomzModal();
@@ -1014,7 +1014,7 @@ function setupEventListeners() {
     });
 }
 
-// ==================== FUNCIONES DE NAVEGACIÓN ====================
+// ==================== NAVIGATION FUNCTIONS ====================
 
 // Ir al index
 function goToIndex() {
@@ -1028,12 +1028,12 @@ function logout() {
         if (window.RoomZAuth && window.RoomZAuth.clearSession) {
             window.RoomZAuth.clearSession();
         } else {
-            // Fallback: limpiar localStorage directamente
+            // Fallback: clear localStorage directly
             localStorage.removeItem('roomieZ_userId');
             localStorage.removeItem('roomieZ_isAuthenticated');
         }
         
-        // Redirigir al index
+        // Redirect to index
         window.location.href = '../../index.html';
     }
 }
