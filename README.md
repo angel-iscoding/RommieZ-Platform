@@ -1,4 +1,4 @@
-# RommieZ Platform
+# RoomieZ Platform
 
 A modern web application for room rental and roommate finding, built with vanilla JavaScript, HTML, and CSS.
 
