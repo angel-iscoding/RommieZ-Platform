@@ -1,19 +1,19 @@
-// Configuración de la API
+// API settings
 const API_BASE_URL = 'http://localhost:3010/api/V1';
 
-// Estado global de la aplicación
+// Global state of the application
 let currentRoomz = null;
 let currentHost = null;
 let currentContacts = null;
 let guestCount = 1;
 
-// Elementos del DOM
+// DOM elements
 const loadingElement = document.getElementById('loading');
 const errorElement = document.getElementById('error');
 const mainContentElement = document.getElementById('main-content');
 const errorMessageElement = document.getElementById('error-message');
 
-// Elementos del Roomz
+// Roomz elements
 const roomzTitleElement = document.getElementById('roomz-title');
 const roomzSubtitleElement = document.getElementById('roomz-subtitle');
 const roomzDetailsElement = document.getElementById('roomz-details');
@@ -23,14 +23,14 @@ const priceBreakdownTextElement = document.getElementById('price-breakdown-text'
 const priceBreakdownTotalElement = document.getElementById('price-breakdown-total');
 const priceTotalElement = document.getElementById('price-total');
 
-// Elementos del anfitrión
+// Host elements
 const hostNameElement = document.getElementById('host-name');
 const hostExperienceElement = document.getElementById('host-experience');
 
-// Elementos de contacto
+// Contact elements
 const contactLinksElement = document.getElementById('contact-links');
 
-// Elementos de reserva
+// Reservation elements
 const checkinElement = document.getElementById('checkin');
 const checkoutElement = document.getElementById('checkout');
 const guestDisplayElement = document.getElementById('guest-display');
@@ -38,56 +38,56 @@ const guestCountElement = document.getElementById('guest-count');
 const guestDropdownElement = document.getElementById('guest-dropdown');
 const decreaseBtnElement = document.getElementById('decrease-btn');
 
-// Inicialización
+// Initialization
 document.addEventListener('DOMContentLoaded', function() {
     initializePage();
 });
 
 
-// Función principal de inicialización
+// Main initialization function
 async function initializePage() {
     try {
         showLoading();
         
-        // Obtener el ID del Roomz de la URL
+        // Get the Roomz ID from the URL
         const roomzId = getRoomzIdFromUrl();
         if (!roomzId) {
             throw new Error('No se encontró el ID del Roomz en la URL');
         }
         
-        // Cargar datos del Roomz
+        // Load Roomz data
         await loadRoomzData(roomzId);
         
-        // Cargar datos del anfitrión
+        // Load host data
         if (currentRoomz && currentRoomz.user_id) {
             await loadHostData(currentRoomz.user_id);
         }
         
-        // Cargar contactos del anfitrión
+        // Load host contacts
         if (currentHost && currentHost.id) {
             await loadHostContacts(currentHost.id);
         }
         
-        // Configurar fechas por defecto
+        // Setup default dates
         setupDefaultDates();
         
-        // Mostrar contenido principal
+        // Show main content
         showMainContent();
         
     } catch (error) {
-        console.error('Error al inicializar la página:', error);
+        console.error('Error initializing the page:', error);
         showError(error.message);
     }
 }
 
-// Obtener ID del Roomz de la URL
+// Get Roomz ID from the URL
 function getRoomzIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-    // Soporte para ambos parámetros: 'id' (legacy) y 'id' (nuevo)
+    // Support for both parameters: 'id' (legacy) and 'id' (new)
     return urlParams.get('id') || urlParams.get('id');
 }
 
-// Cargar datos del Roomz
+// Load Roomz data
 async function loadRoomzData(roomzId) {
     try {
         const url = `${API_BASE_URL}/roomz/${roomzId}`;
@@ -105,21 +105,21 @@ async function loadRoomzData(roomzId) {
         
         const data = await response.json();
         
-        // Verificar que la respuesta tenga la estructura correcta
+        // Verify that the response has the correct structure
         if (data && data.room && data.room.id) {
             currentRoomz = data.room;
             updateRoomzUI();
         } else {
-            console.error('❌ Estructura de respuesta inválida:', data);
-            throw new Error('La API no devolvió un Roomz válido');
+            console.error('Invalid response structure:', data);
+            throw new Error('The API did not return a valid Roomz');
         }
     } catch (error) {
-        console.error('💥 Error completo:', error);
-        throw new Error(`Error al cargar datos del Roomz: ${error.message}`);
+        console.error('Error complete:', error);
+        throw new Error(`Error loading Roomz data: ${error.message}`);
     }
 }
 
-// Cargar datos del anfitrión
+// Load host data
 async function loadHostData(userId) {
     try {
         const url = `${API_BASE_URL}/users/${userId}`;
@@ -132,21 +132,21 @@ async function loadHostData(userId) {
         
         const data = await response.json();
         
-        // Verificar que la respuesta tenga la estructura correcta
+        // Verify that the response has the correct structure
         if (data && data.data && data.data.id) {
             currentHost = data.data;
             updateHostUI();
         } else {
-            console.error('❌ Estructura de respuesta del anfitrión inválida:', data);
-            throw new Error('La API no devolvió datos válidos del anfitrión');
+            console.error('Invalid response structure:', data);
+            throw new Error('The API did not return valid host data');
         }
     } catch (error) {
-        console.error('💥 Error al cargar datos del anfitrión:', error);
+        console.error('Error loading host data:', error);
         throw new Error(`Error al cargar datos del anfitrión: ${error.message}`);
     }
 }
 
-// Cargar contactos del anfitrión
+// Load host contacts
 async function loadHostContacts(userId) {
     try {
         const url = `${API_BASE_URL}/users/${userId}/contacts`;
@@ -165,25 +165,25 @@ async function loadHostContacts(userId) {
         
         const data = await response.json();
         
-        // Verificar que la respuesta tenga la estructura correcta
+        // Verify that the response has the correct structure
         if (data && data.data && data.data.id) {
             currentContacts = data.data;
             updateContactsUI();
         } else {
-            console.error('❌ Estructura de respuesta de contactos inválida:', data);
-            // En caso de estructura inválida, mostrar que no hay contactos disponibles
+            console.error('Invalid response structure:', data);
+            // In case of invalid structure, show that there are no contacts available
             currentContacts = null;
             updateContactsUI();
         }
     } catch (error) {
-        console.error('💥 Error al cargar contactos:', error);
-        // En caso de error, mostrar que no hay contactos disponibles
+        console.error('Error loading contacts:', error);
+        // In case of error, show that there are no contacts available
         currentContacts = null;
         updateContactsUI();
     }
 }
 
-// Actualizar interfaz del Roomz
+// Update Roomz interface
 function updateRoomzUI() {
     if (!currentRoomz) return;
     
@@ -193,29 +193,29 @@ function updateRoomzUI() {
         roomzTitleElement.textContent = currentRoomz.title || 'Sin título';
     }
     
-    // Subtítulo - usar el campo subtitle de la API
+    // Subtitle - use the subtitle field from the API
     if (roomzSubtitleElement) {
         if (currentRoomz.subtitle) {
-            // Si hay subtitle, usarlo directamente
+            // If there is a subtitle, use it directly
             roomzSubtitleElement.textContent = currentRoomz.subtitle;
         } else {
-            // Si no hay subtitle, generar uno con el tipo y dirección
+            // If there is no subtitle, generate one with the type and address
             const typeText = getRoomzTypeText(currentRoomz.roomz_type);
-            roomzSubtitleElement.textContent = `${typeText} en ${currentRoomz.address || 'ubicación no especificada'}`;
+            roomzSubtitleElement.textContent = `${typeText} en ${currentRoomz.address || 'location not specified'}`;
         }
     }
     
-    // Detalles
+    // Details
     if (roomzDetailsElement) {
-        roomzDetailsElement.textContent = currentRoomz.details || 'Sin detalles disponibles';
+        roomzDetailsElement.textContent = currentRoomz.details || 'No details available';
     }
     
-    // Descripción
+    // Description
     if (roomzDescriptionElement) {
-        roomzDescriptionElement.textContent = currentRoomz.description || 'Sin descripción disponible';
+        roomzDescriptionElement.textContent = currentRoomz.description || 'No description available';
     }
     
-    // Precio
+    // Price
     if (roomzPriceElement) {
         const formattedPrice = formatPrice(currentRoomz.price);
         roomzPriceElement.textContent = `${formattedPrice} COP`;
@@ -223,30 +223,30 @@ function updateRoomzUI() {
     
 
     
-    // Mostrar fecha de publicación si está disponible
+    // Show published date if available
     if (currentRoomz.published_at) {
         const publishedDate = new Date(currentRoomz.published_at);
     }
     
-    // Actualizar desglose de precios
+    // Update price breakdown
     updatePriceBreakdown();
 }
 
-// Actualizar interfaz del anfitrión
+// Update host interface
 function updateHostUI() {
     if (!currentHost) return;
     
-    // Nombre del anfitrión
+    // Host name
     if (hostNameElement) {
         const fullName = `${currentHost.first_name || ''} ${currentHost.middle_name || ''} ${currentHost.last_name || ''}`.trim();
         if (fullName) {
-            hostNameElement.textContent = `Anfitrión: ${fullName}`;
+            hostNameElement.textContent = `Host: ${fullName}`;
         } else {
-            hostNameElement.textContent = 'Anfitrión: Usuario';
+            hostNameElement.textContent = 'Host: User';
         }
     }
     
-    // Experiencia del anfitrión
+    // Host experience
     if (hostExperienceElement) {
         if (currentHost.created_at) {
             const createdAt = new Date(currentHost.created_at);
@@ -254,14 +254,14 @@ function updateHostUI() {
             const yearsHosting = currentYear - createdAt.getFullYear();
             
             if (yearsHosting === 0) {
-                hostExperienceElement.textContent = 'Menos de 1 año anfitrionando';
+                hostExperienceElement.textContent = 'Less than 1 year hosting';
             } else if (yearsHosting === 1) {
-                hostExperienceElement.textContent = '1 año anfitrionando';
+                hostExperienceElement.textContent = '1 year hosting';
             } else {
-                hostExperienceElement.textContent = `${yearsHosting} años anfitrionando`;
+                hostExperienceElement.textContent = `${yearsHosting} years hosting`;
             }
         } else {
-            hostExperienceElement.textContent = 'Anfitrión experimentado';
+            hostExperienceElement.textContent = 'Experienced host';
         }
     }
     
@@ -272,65 +272,65 @@ function updateHostUI() {
     }
 }
 
-// Actualizar interfaz de contactos
+// Update contacts interface
 function updateContactsUI() {
     if (!contactLinksElement) return;
 
     
     if (!currentContacts) {
-        contactLinksElement.innerHTML = '<p class="no-contacts">No hay información de contacto disponible</p>';
+        contactLinksElement.innerHTML = '<p class="no-contacts">No contact information available</p>';
         return;
     }
     
     const contactLinks = [];
     
-    // Teléfono
+    // Phone
     if (currentContacts.phone_number) {
         const cleanNumber = currentContacts.phone_number.replace(/\D/g, '');
         const phoneUrl = `tel:${cleanNumber}`;
-        contactLinks.push(createContactLink('phone', 'Teléfono', currentContacts.phone_number, phoneUrl));
+        contactLinks.push(createContactLink('phone', 'Phone', currentContacts.phone_number, phoneUrl));
     }
     
-    // WhatsApp
+    // Whatsapp
     if (currentContacts.whatsapp_number) {
         const cleanNumber = currentContacts.whatsapp_number.replace(/\D/g, '');
         const whatsappUrl = `https://wa.me/${cleanNumber}`;
-        contactLinks.push(createContactLink('whatsapp', 'WhatsApp', currentContacts.whatsapp_number, whatsappUrl));
+        contactLinks.push(createContactLink('whatsapp', 'Whatsapp', currentContacts.whatsapp_number, whatsappUrl));
     }
     
     // Instagram
     if (currentContacts.instagram_url) {
-        contactLinks.push(createContactLink('instagram', 'Instagram', 'Ver perfil', currentContacts.instagram_url));
+        contactLinks.push(createContactLink('instagram', 'Instagram', 'View profile', currentContacts.instagram_url));
     }
     
     // Facebook
     if (currentContacts.facebook_url) {
-        contactLinks.push(createContactLink('facebook', 'Facebook', 'Ver perfil', currentContacts.facebook_url));
+        contactLinks.push(createContactLink('facebook', 'Facebook', 'View profile', currentContacts.facebook_url));
     }
     
     // Twitter
     if (currentContacts.twitter_url) {
-        contactLinks.push(createContactLink('twitter', 'Twitter', 'Ver perfil', currentContacts.twitter_url));
+        contactLinks.push(createContactLink('twitter', 'Twitter', 'View profile', currentContacts.twitter_url));
     }
     
     // LinkedIn
     if (currentContacts.linkedin_url) {
-        contactLinks.push(createContactLink('linkedin', 'LinkedIn', 'Ver perfil', currentContacts.linkedin_url));
+        contactLinks.push(createContactLink('linkedin', 'LinkedIn', 'View profile', currentContacts.linkedin_url));
     }
     
     // TikTok
     if (currentContacts.tiktok_url) {
-        contactLinks.push(createContactLink('tiktok', 'TikTok', 'Ver perfil', currentContacts.tiktok_url));
+        contactLinks.push(createContactLink('tiktok', 'TikTok', 'View profile', currentContacts.tiktok_url));
     }
     
     if (contactLinks.length === 0) {
-        contactLinksElement.innerHTML = '<p class="no-contacts">No hay redes sociales disponibles</p>';
+        contactLinksElement.innerHTML = '<p class="no-contacts">No social media available</p>';
     } else {
         contactLinksElement.innerHTML = contactLinks.join('');
     }
 }
 
-// Crear enlace de contacto
+// Create contact link
 function createContactLink(platform, name, text, url) {
     const icon = getSocialIcon(platform);
     return `
@@ -341,7 +341,7 @@ function createContactLink(platform, name, text, url) {
     `;
 }
 
-// Obtener icono de red social
+// Get social media icon
 function getSocialIcon(platform) {
     const icons = {
         phone: `<svg xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 24 24">
@@ -370,18 +370,18 @@ function getSocialIcon(platform) {
     return icons[platform] || icons.instagram;
 }
 
-// Obtener texto del tipo de Roomz
+// Get Roomz type text
 function getRoomzTypeText(type) {
     const types = {
-        'studio': 'Estudio',
-        'apartment': 'Apartamento',
-        'residential_complex': 'Conjunto residencial'
+        'studio': 'Studio',
+        'apartment': 'Apartment',
+        'residential_complex': 'Residential complex'
     };
     
-    return types[type] || 'Alojamiento';
+    return types[type] || 'Accommodation';
 }
 
-// Formatear precio
+// Format price
 function formatPrice(price) {
     if (!price) return '0';
     
@@ -391,7 +391,7 @@ function formatPrice(price) {
     return numPrice.toLocaleString('es-CO');
 }
 
-// Actualizar desglose de precios
+// Update price breakdown
 function updatePriceBreakdown() {
     if (!currentRoomz || !currentRoomz.price) return;
     
@@ -413,7 +413,7 @@ function updatePriceBreakdown() {
     }
 }
 
-// Configurar fechas por defecto
+// Setup default dates
 function setupDefaultDates() {
     const today = new Date();
     const nextMonth = new Date(today.getFullYear(), today.getMonth() + 1, today.getDate());
@@ -427,7 +427,7 @@ function setupDefaultDates() {
     }
 }
 
-// Funciones de UI
+// UI functions
 function showLoading() {
     loadingElement.classList.remove('hidden');
     errorElement.classList.add('hidden');
@@ -450,7 +450,7 @@ function showMainContent() {
     mainContentElement.classList.remove('hidden');
 }
 
-// Funciones de reserva
+// Reservation functions
 function toggleGuestDropdown() {
     guestDropdownElement.classList.toggle('show');
 }
@@ -484,14 +484,14 @@ function updateDecreaseButton() {
     }
 }
 
-// Cerrar dropdown al hacer clic fuera
+// Close dropdown when clicking outside
 document.addEventListener('click', function(event) {
     if (!event.target.closest('.guest-input')) {
         guestDropdownElement.classList.remove('show');
     }
 });
 
-// Inicializar contador de huéspedes
+// Initialize guest counter
 updateGuestDisplay();
 updateGuestCounter();
 updateDecreaseButton();

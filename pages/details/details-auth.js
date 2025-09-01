@@ -1,8 +1,8 @@
-// ===== EXTENSIÓN DE AUTENTICACIÓN PARA DETAILS =====
+// ===== EXTENSION OF AUTHENTICATION FOR DETAILS =====
 
-// ===== FUNCIONES DE AUTENTICACIÓN COMPARTIDAS =====
+// ===== SHARED AUTHENTICATION FUNCTIONS =====
 
-// Replicar funciones necesarias del index.js
+// Replicate necessary functions from index.js
 async function handleApiResponse(response) {
     const data = await response.json();
     
@@ -28,14 +28,14 @@ async function checkEmailExists(email) {
         return {
             success: true,
             exists: data.isRegistered,
-            message: data.isRegistered ? 'Email encontrado en la base de datos' : 'Email no encontrado'
+            message: data.isRegistered ? 'Email found in database' : 'Email not found'
         };
     } catch (error) {
         console.error('Error checking email:', error);
         return {
             success: false,
             exists: false,
-            message: 'Error al verificar email'
+            message: 'Error verifying email'
         };
     }
 }
@@ -47,7 +47,7 @@ async function loginUser(email, password) {
         if (!emailCheck.exists) {
             return {
                 success: false,
-                message: 'Email no encontrado'
+                message: 'Email not found'
             };
         }
 
@@ -68,19 +68,19 @@ async function loginUser(email, password) {
                     city: user.city,
                     birthdate: user.birthdate
                 },
-                message: 'Inicio de sesión exitoso'
+                message: 'Login successful'
             };
         } else {
             return {
                 success: false,
-                message: 'Contraseña incorrecta'
+                message: 'Incorrect password'
             };
         }
     } catch (error) {
         console.error('Error during login:', error);
         return {
             success: false,
-            message: 'Error de conexión. Intenta de nuevo.'
+            message: 'Connection error. Please try again.'
         };
     }
 }
@@ -92,7 +92,7 @@ async function registerUser(userData) {
         if (emailCheck.exists) {
             return {
                 success: false,
-                message: 'Este email ya está registrado'
+                message: 'This email is already registered'
             };
         }
 
@@ -105,7 +105,7 @@ async function registerUser(userData) {
         if (actualAge < 18) {
             return {
                 success: false,
-                message: 'Debes ser mayor de 18 años para registrarte'
+                message: 'You must be at least 18 years old to register'
             };
         }
 
@@ -142,18 +142,18 @@ async function registerUser(userData) {
                 city: newUser.city,
                 birthdate: newUser.birthdate
             },
-            message: 'Registro exitoso'
+            message: 'Registration successful'
         };
     } catch (error) {
         console.error('Error during registration:', error);
         return {
             success: false,
-            message: error.message || 'Error de conexión. Intenta de nuevo.'
+            message: error.message || 'Connection error. Please try again.'
         };
     }
 }
 
-// Guardar sesión en localStorage (extendida para details)
+// Save session in localStorage (extended for details)
 function saveSession(userData) {
     const sessionData = {
         user: userData,
@@ -168,11 +168,11 @@ function saveSession(userData) {
     currentUser = userData;
     isAuthenticated = true;
     
-    // Actualizar UI después de login
+    // Update UI after login
     updateUIForAuthenticatedUser();
 }
 
-// ===== FUNCIONES DE UI DE MODALES =====
+// ===== MODAL UI FUNCTIONS =====
 
 function showLoginModal() {
     const modal = document.getElementById('loginModal');
@@ -206,7 +206,7 @@ function hideRegisterModal() {
     }
 }
 
-// ===== FUNCIONES DE FORMULARIOS =====
+// ===== FORM FUNCTIONS =====
 
 function resetLoginForm() {
     const emailInput = document.getElementById('loginEmail');
@@ -220,7 +220,7 @@ function resetLoginForm() {
         passwordInput.removeAttribute('required');
     }
     if (passwordSection) passwordSection.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Inicia sección';
+    if (submitBtn) submitBtn.textContent = 'Start session';
     clearLoginErrors();
 }
 
@@ -235,7 +235,7 @@ function resetRegisterForm() {
     if (firstNameInput) firstNameInput.value = '';
     if (lastNameInput) lastNameInput.value = '';
     if (birthDateInput) birthDateInput.value = '';
-    if (cityInput) cityInput.value = 'Barranquilla';
+    if (cityInput) cityInput.value = 'Barranquilla, CO ';
     if (emailInput) emailInput.value = '';
     if (passwordInput) passwordInput.value = '';
     clearRegisterErrors();
@@ -314,7 +314,7 @@ function showRegisterError(field, message) {
     }
 }
 
-// ===== FUNCIONES DE VALIDACIÓN =====
+// ===== VALIDATION FUNCTIONS =====
 
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -352,7 +352,7 @@ function updateUIForLoggedOutUser() {
     }
 }
 
-// ===== MANEJO DE FORMULARIOS =====
+// ===== FORM HANDLING FUNCTIONS =====
 
 async function handleLoginSubmit(e) {
     e.preventDefault();
@@ -365,40 +365,40 @@ async function handleLoginSubmit(e) {
 
     if (passwordSection.style.display === 'none') {
         if (!email) {
-            showLoginError('email', 'El email es requerido');
+            showLoginError('email', 'Email is required');
             return;
         }
 
         if (!validateEmail(email)) {
-            showLoginError('email', 'Por favor ingresa un email válido');
+            showLoginError('email', 'Please enter a valid email');
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Verificando...';
+        submitBtn.textContent = 'Verifying...';
 
         try {
             const response = await checkEmailExists(email);
-            
+
             if (response.exists) {
-                showEmailSuccess('¡Email encontrado! Ingresa tu contraseña');
+                showEmailSuccess('Email found! Enter your password');
                 passwordSection.style.display = 'block';
-                // Agregar required al campo de contraseña cuando se muestre
+                // Add required to the password field when it is shown
                 const passwordInput = document.getElementById('loginPassword');
                 if (passwordInput) passwordInput.setAttribute('required', 'true');
-                submitBtn.textContent = 'Inicia sección';
+                submitBtn.textContent = 'Start session';
                 passwordInput.focus();
             } else {
                 hideLoginModal();
                 showRegisterModal();
-                // Pre-llenar el email en el formulario de registro
+                // Pre-fill the email in the registration form
                 const registerEmailField = document.getElementById('registerEmail');
                 if (registerEmailField) {
                     registerEmailField.value = email;
                 }
             }
         } catch (error) {
-            showLoginError('email', 'Error al verificar el email. Intenta de nuevo.');
+            showLoginError('email', 'Error verifying email. Please try again.');
         } finally {
             submitBtn.disabled = false;
         }
@@ -406,31 +406,31 @@ async function handleLoginSubmit(e) {
         const password = document.getElementById('loginPassword').value;
 
         if (!password) {
-            showLoginError('password', 'La contraseña es requerida');
+            showLoginError('password', 'Password is required');
             return;
         }
 
         if (password.length < 8) {
-            showLoginError('password', 'La contraseña debe tener al menos 8 caracteres');
+            showLoginError('password', 'Password must have at least 8 characters');
             return;
         }
 
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Iniciando sesión...';
+        submitBtn.textContent = 'Starting session...';
 
         try {
             const response = await loginUser(email, password);
             
             if (response.success) {
                 saveSession(response.data);
-                alert(`¡Bienvenido de vuelta, ${response.data.firstName}!`);
+                alert(`Welcome back, ${response.data.firstName}!`);
                 hideLoginModal();
                 updateUIForAuthenticatedUser();
             } else {
                 showLoginError('password', response.message);
             }
         } catch (error) {
-            showLoginError('password', 'Error al iniciar sesión. Intenta de nuevo.');
+            showLoginError('password', 'Error starting session. Please try again.');
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Sign In';
@@ -457,76 +457,76 @@ async function handleRegisterSubmit(e) {
     let hasErrors = false;
 
     if (!formData.firstName) {
-        showRegisterError('name', 'El nombre es requerido');
+        showRegisterError('name', 'Name is required');
         hasErrors = true;
     }
 
     if (!formData.lastName) {
-        showRegisterError('name', 'El apellido es requerido');
+        showRegisterError('name', 'Last name is required');
         hasErrors = true;
     }
 
     if (!formData.birthDate) {
-        showRegisterError('birthDate', 'La fecha de nacimiento es requerida');
+        showRegisterError('birthDate', 'Date of birth is required');
         hasErrors = true;
     } else if (!validateAge(formData.birthDate)) {
-        showRegisterError('birthDate', 'Debes ser mayor de 18 años para registrarte');
+        showRegisterError('birthDate', 'You must be at least 18 years old to register');
         hasErrors = true;
     }
 
     if (!formData.city) {
-        showRegisterError('city', 'La ciudad es requerida');
+        showRegisterError('city', 'City is required');
         hasErrors = true;
     }
 
     if (!formData.email) {
-        showRegisterError('registerEmail', 'El email es requerido');
+        showRegisterError('registerEmail', 'Email is required');
         hasErrors = true;
     } else if (!validateEmail(formData.email)) {
-        showRegisterError('registerEmail', 'Por favor ingresa un email válido');
+        showRegisterError('registerEmail', 'Please enter a valid email');
         hasErrors = true;
     }
 
     if (!formData.password) {
-        showRegisterError('registerPassword', 'La contraseña es requerida');
+        showRegisterError('registerPassword', 'Password is required');
         hasErrors = true;
     } else if (formData.password.length < 8) {
-        showRegisterError('registerPassword', 'La contraseña debe tener al menos 8 caracteres');
+        showRegisterError('registerPassword', 'Password must have at least 8 characters');
         hasErrors = true;
     }
 
     if (hasErrors) return;
 
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Creando cuenta...';
+    submitBtn.textContent = 'Creating account...';
 
     try {
         const response = await registerUser(formData);
         
         if (response.success) {
             saveSession(response.data);
-            alert('¡Registro exitoso! Bienvenido a RoomieZ!');
+            alert('Registration successful! Welcome to RoomieZ!');
             hideRegisterModal();
             updateUIForAuthenticatedUser();
         } else {
             showRegisterError('registerEmail', response.message);
         }
     } catch (error) {
-        alert('Error en el registro. Intenta de nuevo.');
+        alert('Error in registration. Please try again.');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';
     }
 }
 
-// ===== INICIALIZACIÓN DE EVENT LISTENERS =====
+// ===== INITIALIZATION OF EVENT LISTENERS =====
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar sesión
+    // Load session
     loadSession();
     updateUIForAuthenticatedUser();
 
-    // Event listeners de navegación
+    // Event listeners for navigation
     const menuBtn = document.getElementById('menuBtn');
     const loginBtn = document.getElementById('loginBtn');
     const configBtn = document.getElementById('configBtn');
@@ -545,7 +545,7 @@ document.addEventListener('DOMContentLoaded', function() {
             const dropdown = document.getElementById('dropdownMenu');
             if (dropdown) dropdown.classList.remove('active');
             if (isAuthenticated) {
-                alert(`Estás conectado como ${currentUser.firstName} ${currentUser.lastName}`);
+                alert(`You are connected as ${currentUser.firstName} ${currentUser.lastName}`);
             } else {
                 showLoginModal();
             }
@@ -559,7 +559,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (isAuthenticated) {
                 redirectTo('../config/config.html', { userId: currentUser.id });
             } else {
-                alert('Debes iniciar sesión para acceder a la configuración');
+                alert('You must login to access the configuration');
                 showLoginModal();
             }
         });
@@ -569,15 +569,15 @@ document.addEventListener('DOMContentLoaded', function() {
         logoutBtn.addEventListener('click', function() {
             const dropdown = document.getElementById('dropdownMenu');
             if (dropdown) dropdown.classList.remove('active');
-            if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            if (confirm('Are you sure you want to close session?')) {
                 clearSession();
                 updateUIForLoggedOutUser();
-                alert('Sesión cerrada exitosamente');
+                alert('Session closed successfully');
             }
         });
     }
 
-    // Event listeners de modales
+    // Event listeners for modals
     const closeLoginBtn = document.getElementById('closeLoginModal');
     const closeRegisterBtn = document.getElementById('closeRegisterModal');
     const switchToRegisterBtn = document.getElementById('switchToRegister');
@@ -614,14 +614,14 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    // Event listeners de formularios
+    // Event listeners for forms
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
 
     if (loginForm) loginForm.addEventListener('submit', handleLoginSubmit);
     if (registerForm) registerForm.addEventListener('submit', handleRegisterSubmit);
 
-    // Cerrar dropdowns al hacer click fuera
+    // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         const dropdownMenu = document.getElementById('dropdownMenu');
         
