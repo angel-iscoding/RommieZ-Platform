@@ -58,17 +58,17 @@ async function checkEmailExists(email) {
 // Function for user login
 async function loginUser(email, password) {
     try {
-        // Primero verificamos que el email existe
+        // verify that the email exists
         const emailCheck = await checkEmailExists(email);
         
         if (!emailCheck.exists) {
             return {
                 success: false,
-                message: 'Email no encontrado'
+                message: 'Email not found'
             };
         }
 
-        // Obtener todos los usuarios y validar credenciales
+        // Get all users and validate credentials
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.USERS}`);
         const data = await handleApiResponse(response);
         
@@ -103,20 +103,20 @@ async function loginUser(email, password) {
     }
 }
 
-// Function for registro de usuario
+// Function for register user
 async function registerUser(userData) {
     try {
-            // Verificar si el email ya existe
+            // verify that the email already exists
         const emailCheck = await checkEmailExists(userData.email);
             
         if (emailCheck.exists) {
             return {
                     success: false,
-                    message: 'Este email ya está registrado'
+                    message: 'This email is already registered'
             };
             }
 
-            // Validar edad (18+)
+            // validate age (18+)
             const birthDate = new Date(userData.birthDate);
             const today = new Date();
             const age = today.getFullYear() - birthDate.getFullYear();
@@ -126,19 +126,19 @@ async function registerUser(userData) {
             if (actualAge < 18) {
             return {
                     success: false,
-                    message: 'Debes ser mayor de 18 años para registrarte'
+                    message: 'You must be 18 years or older to register'
             };
             }
 
-        // Crear usuario en la API
+        // Create user in the API
             const newUser = {
                 first_name: userData.firstName,
                 middle_name: userData.middleName || null,
                 last_name: userData.lastName,
                 username: userData.email.split('@')[0],
                 email: userData.email,
-            password: userData.password, // En producción debería estar hasheada
-            city: userData.city || 'Barranquilla', // Ciudad por defecto
+            password: userData.password, // In production it should be hashed
+            city: userData.city || 'Barranquilla', // Default city
             birthdate: userData.birthDate,
             role: 'student'
         };
@@ -164,18 +164,18 @@ async function registerUser(userData) {
                 city: newUser.city,
                 birthdate: newUser.birthdate
                 },
-                message: 'Registro exitoso'
+                message: 'Registration successful'
         };
     } catch (error) {
         console.error('Error during registration:', error);
         return {
             success: false,
-            message: error.message || 'Error de conexión. Please try again.'
+            message: error.message || 'Connection error. Please try again.'
         };
     }
 }
 
-// ===== FUNCIONES DE ROOMZ (PUBLICACIONES) =====
+// ===== ROOMZ FUNCTIONS (PUBLICATIONS) =====
 
 // Function for obtener todas las roomz
 async function fetchRoomz(filter = 'all') {
@@ -185,7 +185,7 @@ async function fetchRoomz(filter = 'all') {
         
         let roomz = data.roomz || [];
         
-        // Transformar datos de la API al formato esperado por el frontend
+        // Transform data from the API to the expected format by the frontend
         roomz = roomz.map(room => ({
             id: room.id,
             user_id: room.user_id,
@@ -200,7 +200,7 @@ async function fetchRoomz(filter = 'all') {
             published_at: room.published_at
         }));
             
-            // Aplicar filtros
+            // Apply filters
             switch(filter) {
                 case 'available':
                 roomz = roomz.filter(room => room.is_available);
@@ -216,19 +216,19 @@ async function fetchRoomz(filter = 'all') {
         return {
                 success: true,
             data: roomz,
-            message: 'Roomz obtenidas exitosamente'
+            message: 'Roomz obtained successfully'
         };
     } catch (error) {
         console.error('Error fetching roomz:', error);
         return {
             success: false,
             data: [],
-            message: 'Error al cargar las roomz'
+            message: 'Error loading the roomz'
         };
     }
 }
 
-// Function for buscar roomz
+// Function for search roomz
 async function searchRoomz(query) {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ROOMZ}`);
@@ -236,7 +236,7 @@ async function searchRoomz(query) {
         
         let roomz = data.roomz || [];
         
-        // Transformar y filtrar por búsqueda
+        // Transform and filter by search
         const filteredRoomz = roomz
             .map(room => ({
                 id: room.id,
@@ -263,19 +263,19 @@ async function searchRoomz(query) {
         return {
                 success: true,
             data: filteredRoomz,
-            message: `${filteredRoomz.length} resultados encontrados`
+            message: `${filteredRoomz.length} results found`
         };
     } catch (error) {
         console.error('Error searching roomz:', error);
         return {
             success: false,
             data: [],
-            message: 'Error en la búsqueda'
+            message: 'Error in the search'
         };
     }
 }
 
-// Function for obtener una roomz específica
+// Function for get a specific room
 async function getRoomById(id) {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ROOMZ}/${id}`);
@@ -298,63 +298,63 @@ async function getRoomById(id) {
                 is_available: room.is_available === 1 || room.is_available === true,
                 published_at: room.published_at
             },
-            message: 'Room obtenida exitosamente'
+            message: 'Room obtained successfully'
         };
     } catch (error) {
         console.error('Error fetching room:', error);
         return {
             success: false,
             data: null,
-            message: 'Error al cargar la room'
+                message: 'Error loading the room'
         };
     }
 }
 
-// ===== FUNCIONES DE SESIÓN =====
+// ===== SESSION FUNCTIONS =====
 
-// Guardar sesión en localStorage
+// Save session in localStorage
 function saveSession(userData) {
     const sessionData = {
         user: userData,
-        userId: userData.id, // Guardar ID específicamente para acceso rápido
+        userId: userData.id, // Save ID specifically for quick access
         isAuthenticated: true,
         timestamp: Date.now()
     };
     
     localStorage.setItem('roomieZ_session', JSON.stringify(sessionData));
-    localStorage.setItem('roomieZ_userId', userData.id.toString()); // ID separado para verificación rápida
+    localStorage.setItem('roomieZ_userId', userData.id.toString()); // ID separated for quick verification
     
     currentUser = userData;
     isAuthenticated = true;
 }
 
-// Obtener ID del usuario desde localStorage
+// Get user ID from localStorage
 function getCurrentUserId() {
     const userId = localStorage.getItem('roomieZ_userId');
     return userId ? parseInt(userId) : null;
 }
 
-// Verificar si el usuario actual puede acceder a configuración
+// Verify if the current user can access configuration
 function canAccessConfig(targetUserId = null) {
     if (!isAuthenticated || !currentUser) {
         return false;
     }
     
-    // Si no se especifica targetUserId, verificar acceso general
+    // If targetUserId is not specified, verify general access
     if (targetUserId === null) {
         return true;
     }
     
-    // Solo puede acceder a su propia configuración
+    // Only can access its own configuration
     return currentUser.id === targetUserId;
 }
 
-// Cargar sesión desde localStorage
+// Load session from localStorage
 function loadSession() {
     const sessionData = localStorage.getItem('roomieZ_session');
     if (sessionData) {
         const session = JSON.parse(sessionData);
-        // Verificar que la sesión no sea muy antigua (24 horas)
+        // Verify that the session is not too old (24 hours)
         if (Date.now() - session.timestamp < 24 * 60 * 60 * 1000) {
             currentUser = session.user;
             isAuthenticated = session.isAuthenticated;
@@ -365,7 +365,7 @@ function loadSession() {
     }
 }
 
-// Limpiar sesión
+// Clear session
 function clearSession() {
     localStorage.removeItem('roomieZ_session');
     localStorage.removeItem('roomieZ_userId');
@@ -374,15 +374,15 @@ function clearSession() {
     updateUIForLoggedOutUser();
 }
 
-// ===== FUNCIONES DE VALIDACIÓN =====
+    // ===== VALIDATION FUNCTIONS =====
 
-// Validar email
+// Validate email
 function validateEmail(email) {
     const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
     return emailRegex.test(email);
 }
 
-// Validar edad (18+)
+// Validate age (18+)
 function validateAge(birthDate) {
     const today = new Date();
     const birth = new Date(birthDate);
@@ -392,9 +392,9 @@ function validateAge(birthDate) {
     return actualAge >= 18;
 }
 
-// ===== FUNCIONES DE UI =====
+// ===== UI FUNCTIONS =====
 
-// Function for renderizar publicaciones
+// Function for render publications
 function renderPublications(publications) {
     const grid = document.getElementById('publicationsGrid');
     
@@ -403,8 +403,8 @@ function renderPublications(publications) {
     if (publications.length === 0) {
         grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">
-                <h3>No se encontraron RoomZ</h3>
-                <p>Intenta con otros filtros de búsqueda</p>
+                <h3>No RoomZ found</h3>
+                <p>Try with other search filters</p>
             </div>
         `;
         return;
@@ -435,7 +435,7 @@ function renderPublications(publications) {
     `).join('');
 }
 
-// Function for mostrar estado de carga
+// Function for show loading state
 function showLoading() {
     const loadingState = document.getElementById('loadingState');
     const publicationsGrid = document.getElementById('publicationsGrid');
@@ -444,7 +444,7 @@ function showLoading() {
     if (publicationsGrid) publicationsGrid.style.display = 'none';
 }
 
-// Function for ocultar estado de carga
+// Function for hide loading state
 function hideLoading() {
     const loadingState = document.getElementById('loadingState');
     const publicationsGrid = document.getElementById('publicationsGrid');
@@ -453,9 +453,9 @@ function hideLoading() {
     if (publicationsGrid) publicationsGrid.style.display = 'grid';
 }
 
-// ===== FUNCIONES DE MODALES =====
+// ===== MODAL FUNCTIONS =====
 
-// Mostrar modal de login
+// Show login modal
 function showLoginModal() {
     const modal = document.getElementById('loginModal');
     if (modal) {
@@ -464,7 +464,7 @@ function showLoginModal() {
     }
 }
 
-// Ocultar modal de login
+// Hide login modal
 function hideLoginModal() {
     const modal = document.getElementById('loginModal');
     if (modal) {
@@ -473,7 +473,7 @@ function hideLoginModal() {
     }
 }
 
-// Mostrar modal de registro
+// Show register modal
 function showRegisterModal() {
     const modal = document.getElementById('registerModal');
     if (modal) {
@@ -482,7 +482,7 @@ function showRegisterModal() {
     }
 }
 
-// Ocultar modal de registro
+// Hide register modal
 function hideRegisterModal() {
     const modal = document.getElementById('registerModal');
     if (modal) {
@@ -491,9 +491,9 @@ function hideRegisterModal() {
     }
 }
 
-// ===== FUNCIONES DE FORMULARIOS =====
+// ===== FORM FUNCTIONS =====
 
-// Reset del formulario de login
+// Reset login form
 function resetLoginForm() {
     const emailInput = document.getElementById('loginEmail');
     const passwordInput = document.getElementById('loginPassword');
@@ -506,11 +506,11 @@ function resetLoginForm() {
         passwordInput.removeAttribute('required');
     }
     if (passwordSection) passwordSection.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Inicia sección';
+    if (submitBtn) submitBtn.textContent = 'Start session';
     clearLoginErrors();
 }
 
-// Reset del formulario de registro
+// Reset register form
 function resetRegisterForm() {
     const firstNameInput = document.getElementById('firstName');
     const lastNameInput = document.getElementById('lastName');
@@ -522,13 +522,13 @@ function resetRegisterForm() {
     if (firstNameInput) firstNameInput.value = '';
     if (lastNameInput) lastNameInput.value = '';
     if (birthDateInput) birthDateInput.value = '';
-    if (cityInput) cityInput.value = 'Barranquilla'; // Valor por defecto
+    if (cityInput) cityInput.value = 'Barranquilla'; // Default city
     if (emailInput) emailInput.value = '';
     if (passwordInput) passwordInput.value = '';
     clearRegisterErrors();
 }
 
-// Limpiar errores de login
+// Clear login errors
 function clearLoginErrors() {
     const emailError = document.getElementById('emailError');
     const emailSuccess = document.getElementById('emailSuccess');
@@ -543,7 +543,7 @@ function clearLoginErrors() {
     if (passwordInput && passwordInput.parentElement) passwordInput.parentElement.classList.remove('error');
 }
 
-// Limpiar errores de registro
+// Clear register errors
 function clearRegisterErrors() {
     const errorElements = ['nameError', 'birthDateError', 'cityError', 'registerEmailError', 'registerPasswordError'];
     errorElements.forEach(id => {
@@ -558,7 +558,7 @@ function clearRegisterErrors() {
     });
 }
 
-// Mostrar error de login
+// Show login error
 function showLoginError(field, message) {
     const errorElement = document.getElementById(`${field}Error`);
     const inputElement = document.getElementById(field === 'email' ? 'loginEmail' : 'loginPassword');
@@ -572,7 +572,7 @@ function showLoginError(field, message) {
     }
 }
 
-// Mostrar éxito de email
+// Show email success
 function showEmailSuccess(message) {
     const successElement = document.getElementById('emailSuccess');
     const emailInput = document.getElementById('loginEmail');
@@ -586,7 +586,7 @@ function showEmailSuccess(message) {
     }
 }
 
-// Mostrar error de registro
+// Show register error
 function showRegisterError(field, message) {
     const errorElement = document.getElementById(`${field}Error`);
     
@@ -595,7 +595,7 @@ function showRegisterError(field, message) {
     errorElement.classList.add('show');
     }
     
-    // Obtener el campo de input correspondiente
+    // Get the corresponding input field
     let inputId = field;
     if (field === 'name') inputId = 'firstName';
     if (field === 'registerEmail') inputId = 'registerEmail';
@@ -607,13 +607,13 @@ function showRegisterError(field, message) {
     }
 }
 
-// ===== FUNCIONES DE NAVEGACIÓN Y REDIRECCIÓN =====
+// ===== NAVIGATION AND REDIRECTION FUNCTIONS =====
 
-// Function for redireccionar a páginas
+// Function for redirect to pages
 function redirectTo(path, params = {}) {
     let url = path;
     
-    // Agregar parámetros como query string
+    // Add parameters as query string
     if (Object.keys(params).length > 0) {
         const queryString = new URLSearchParams(params).toString();
         url += `?${queryString}`;
@@ -622,23 +622,23 @@ function redirectTo(path, params = {}) {
     window.location.href = url;
 }
 
-// Function for verificar autenticación antes de acceso
+    // Function for verify authentication before access
 function requireAuth(redirectPath = 'index.html') {
     if (!isAuthenticated || !currentUser) {
-        alert('Debes iniciar sesión para acceder a esta funcionalidad');
+        alert('You must log in to access this functionality');
         redirectTo(redirectPath);
         return false;
     }
     return true;
 }
 
-// Manejar click en publicación - FUNCIÓN GLOBAL
+// Handle click on publication - GLOBAL FUNCTION
 window.handlePublicationClick = function(publicationId) {
-    // Navegar a detalles sin requerir autenticación previa
+    // Navigate to details without requiring previous authentication
     redirectTo('pages/details/details.html', { id: publicationId });
 };
 
-// Function for navegar a configuración
+// Function for navigate to configuration
 function navigateToConfig() {
     if (!requireAuth()) {
         return;
@@ -647,7 +647,7 @@ function navigateToConfig() {
     redirectTo('pages/config/config.html', { userId: currentUser.id });
 }
 
-// Function for obtener parámetros de la URL
+// Function for get parameters from the URL
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     const result = {};
@@ -657,12 +657,12 @@ function getUrlParams() {
     return result;
 }
 
-// Función auxiliar para cargar publicaciones - FUNCIÓN GLOBAL  
+// Auxiliary function to load publications - GLOBAL FUNCTION  
 window.loadPublications = loadPublications;
 
-// ===== FUNCIONES DE UI PARA AUTENTICACIÓN =====
+// ===== UI FUNCTIONS FOR AUTHENTICATION =====
 
-// Actualizar UI para usuario autenticado
+// Update UI for authenticated user
 function updateUIForAuthenticatedUser() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -673,7 +673,7 @@ function updateUIForAuthenticatedUser() {
     }
 }
 
-// Actualizar UI para usuario no autenticado
+// Update UI for unauthenticated user
 function updateUIForLoggedOutUser() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
@@ -687,15 +687,15 @@ function updateUIForLoggedOutUser() {
 // ===== EVENT LISTENERS PRINCIPALES =====
 
 document.addEventListener('DOMContentLoaded', async function() {
-    // Cargar sesión existente
+    // Load existing session
     loadSession();
     
-    // Cargar publicaciones iniciales
+    // Load initial publications
     await loadPublications();
 
-    // ===== EVENT LISTENERS DE NAVEGACIÓN =====
+    // ===== EVENT LISTENERS FOR NAVIGATION =====
 
-    // Botón de inicio
+    // Start button
     const roomZBtn = document.getElementById('RoomZBtn');
     const menuBtn = document.getElementById('menuBtn');
     const loginBtn = document.getElementById('loginBtn');
@@ -717,13 +717,13 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // Opciones del menú
+    // Menu options
     if (loginBtn) {
         loginBtn.addEventListener('click', function() {
             const dropdown = document.getElementById('dropdownMenu');
             if (dropdown) dropdown.classList.remove('active');
         if (isAuthenticated) {
-            alert(`Estás conectado como ${currentUser.firstName} ${currentUser.lastName}`);
+            alert(`You are connected as ${currentUser.firstName} ${currentUser.lastName}`);
         } else {
             showLoginModal();
         }
@@ -742,16 +742,16 @@ document.addEventListener('DOMContentLoaded', async function() {
         logoutBtn.addEventListener('click', function() {
             const dropdown = document.getElementById('dropdownMenu');
             if (dropdown) dropdown.classList.remove('active');
-        if (confirm('¿Estás seguro de que quieres cerrar sesión?')) {
+            if (confirm('Are you sure you want to close session?')) {
             clearSession();
-            alert('Sesión cerrada exitosamente');
+            alert('Session closed successfully');
         }
     });
     }
 
-    // ===== EVENT LISTENERS DE BÚSQUEDA Y FILTROS =====
+    // ===== EVENT LISTENERS FOR SEARCH AND FILTERS =====
 
-    // Input de filtro/búsqueda
+    // Input for filter/search
     const filterInput = document.getElementById('filterInput');
     const filterDropdown = document.getElementById('filterDropdown');
     let searchTimeout;
@@ -764,12 +764,12 @@ document.addEventListener('DOMContentLoaded', async function() {
     filterInput.addEventListener('input', async function() {
         const query = this.value.trim();
         
-        // Limpiar timeout anterior
+        // Clear previous timeout
         if (searchTimeout) {
             clearTimeout(searchTimeout);
         }
         
-        // Debounce de búsqueda
+        // Debounce search
         searchTimeout = setTimeout(async () => {
             if (query.length > 2) {
                 showLoading();
@@ -783,7 +783,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // Opciones de filtro
+    // Filter options
     const filterOptions = document.querySelectorAll('.filter-option');
     if (filterOptions.length > 0 && filterInput && filterDropdown) {
         filterOptions.forEach(option => {
@@ -801,9 +801,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // ===== EVENT LISTENERS DE MODALES =====
+    // ===== EVENT LISTENERS FOR MODALS =====
 
-    // Cerrar modales
+    // Close modals
     const closeLoginBtn = document.getElementById('closeLoginModal');
     const closeRegisterBtn = document.getElementById('closeRegisterModal');
     const switchToRegisterBtn = document.getElementById('switchToRegister');
@@ -819,7 +819,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         closeRegisterBtn.addEventListener('click', hideRegisterModal);
     }
 
-    // Cambiar entre login y registro
+    // Change between login and register
     if (switchToRegisterBtn) {
         switchToRegisterBtn.addEventListener('click', function() {
         hideLoginModal();
@@ -834,7 +834,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // Botón de volver en el modal de registro
+    // Back button in the register modal
     const backToLoginBtn = document.getElementById('backToLoginBtn');
     if (backToLoginBtn) {
         backToLoginBtn.addEventListener('click', function() {
@@ -843,7 +843,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Selector de ciudad
+    // City selector
     const citySelect = document.getElementById('citySelect');
     const cityInput = document.getElementById('city');
     if (citySelect && cityInput) {
@@ -854,7 +854,7 @@ document.addEventListener('DOMContentLoaded', async function() {
         });
     }
 
-    // Cerrar modales al hacer click en el overlay
+        // Close modals when clicking on the overlay
     if (loginModal) {
         loginModal.addEventListener('click', function(e) {
         if (e.target === this) {
@@ -871,9 +871,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // ===== EVENT LISTENERS DE FORMULARIOS =====
+    // ===== EVENT LISTENERS FOR FORMULARIES =====
 
-    // Formulario de login
+    // Login form
     const loginForm = document.getElementById('loginForm');
     const registerForm = document.getElementById('registerForm');
 
@@ -885,9 +885,9 @@ document.addEventListener('DOMContentLoaded', async function() {
         registerForm.addEventListener('submit', handleRegisterSubmit);
     }
 
-    // ===== EVENT LISTENERS DE BOTONES SOCIALES =====
+    // ===== EVENT LISTENERS FOR SOCIAL BUTTONS =====
 
-    // Botones de login social (simulados)
+    // Social login buttons (mocked)
     const googleBtn = document.getElementById('googleLoginBtn');
     const appleBtn = document.getElementById('appleLoginBtn');
     const emailBtn = document.getElementById('emailLoginBtn');
@@ -917,7 +917,7 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    // Cerrar dropdowns al hacer click fuera
+    // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {
         const filterDropdown = document.getElementById('filterDropdown');
         const dropdownMenu = document.getElementById('dropdownMenu');
@@ -931,9 +931,9 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
 });
 
-// ===== FUNCIONES DE MANEJO DE FORMULARIOS =====
+// ===== FORM HANDLING FUNCTIONS =====
 
-// Manejar envío del formulario de login
+// Handle login form submission
 async function handleLoginSubmit(e) {
     e.preventDefault();
     
@@ -943,84 +943,84 @@ async function handleLoginSubmit(e) {
     
     clearLoginErrors();
 
-    // Si la sección de contraseña no está visible, validar email
+    // If the password section is not visible, validate email
     if (passwordSection.style.display === 'none') {
-        // Validar que el email no esté vacío
+        // Validate that the email is not empty
         if (!email) {
             showLoginError('email', 'El email es requerido');
             return;
         }
 
-        // Validar formato del email
+        // Validate email format
         if (!validateEmail(email)) {
             showLoginError('email', 'Por favor ingresa un email válido');
             return;
         }
 
-        // Deshabilitar botón y mostrar loading
+        // Disable button and show loading
         submitBtn.disabled = true;
         submitBtn.textContent = 'Verificando...';
 
         try {
-            // Verificar si el email existe en la base de datos
+            // Verify if the email exists in the database
             const response = await checkEmailExists(email);
             
             if (response.exists) {
-                // Email encontrado, mostrar campo de contraseña
+                // Email found, show password field
                 showEmailSuccess('¡Email encontrado! Ingresa tu contraseña');
                 passwordSection.style.display = 'block';
-                // Agregar required al campo de contraseña cuando se muestre
+                // Add required to the password field when it is shown
                 const passwordInput = document.getElementById('loginPassword');
                 if (passwordInput) passwordInput.setAttribute('required', 'true');
-                submitBtn.textContent = 'Inicia sección';
+                submitBtn.textContent = 'Start session';
                 passwordInput.focus();
             } else {
-                // Email no encontrado, abrir modal de registro con email prellenado
+                // Email not found, open register modal with email pre-filled
                     hideLoginModal();
                     showRegisterModal();
-                // Pre-llenar el email en el formulario de registro
+                // Pre-fill the email in the register form
                 const registerEmailField = document.getElementById('registerEmail');
                 if (registerEmailField) {
                     registerEmailField.value = email;
                 }
             }
         } catch (error) {
-            showLoginError('email', 'Error al verificar el email. Please try again.');
+            showLoginError('email', 'Error verifying email. Please try again.');
         } finally {
             submitBtn.disabled = false;
         }
     } else {
-        // Validar contraseña y hacer login
+        // Validate password and login
         const password = document.getElementById('loginPassword').value;
 
         if (!password) {
-            showLoginError('password', 'La contraseña es requerida');
+            showLoginError('password', 'The password is required');
             return;
         }
 
         if (password.length < 8) {
-            showLoginError('password', 'La contraseña debe tener al menos 8 caracteres');
+            showLoginError('password', 'The password must have at least 8 characters');
             return;
         }
 
-        // Deshabilitar botón y mostrar loading
+        // Disable button and show loading
         submitBtn.disabled = true;
-        submitBtn.textContent = 'Iniciando sesión...';
+        submitBtn.textContent = 'Starting session...';
 
         try {
             const response = await loginUser(email, password);
             
             if (response.success) {
-                // Login exitoso
+                // Login successful
                 saveSession(response.data);
-                alert(`¡Bienvenido de vuelta, ${response.data.firstName}!`);
+                alert(`Welcome back, ${response.data.firstName}!`);
                 hideLoginModal();
                 updateUIForAuthenticatedUser();
             } else {
                 showLoginError('password', response.message);
             }
         } catch (error) {
-            showLoginError('password', 'Error al iniciar sesión. Please try again.');
+            showLoginError('password', 'Error starting session. Please try again.');
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Sign In';
@@ -1028,7 +1028,7 @@ async function handleLoginSubmit(e) {
     }
 }
 
-// Manejar envío del formulario de registro
+// Handle register form submission
 async function handleRegisterSubmit(e) {
     e.preventDefault();
     
@@ -1046,89 +1046,89 @@ async function handleRegisterSubmit(e) {
     
     clearRegisterErrors();
 
-    // Validación del formulario
+    // Validation of the form
     let hasErrors = false;
 
-    // Validar nombres
+    // Validate names
     if (!formData.firstName) {
-        showRegisterError('name', 'El nombre es requerido');
+        showRegisterError('name', 'The first name is required');
         hasErrors = true;
     }
 
     if (!formData.lastName) {
-        showRegisterError('name', 'El apellido es requerido');
+        showRegisterError('name', 'The last name is required');
         hasErrors = true;
     }
 
-    // Validar fecha de nacimiento
+    // Validate birth date
     if (!formData.birthDate) {
-        showRegisterError('birthDate', 'La fecha de nacimiento es requerida');
+        showRegisterError('birthDate', 'The birth date is required');
         hasErrors = true;
     } else if (!validateAge(formData.birthDate)) {
-        showRegisterError('birthDate', 'Debes ser mayor de 18 años para registrarte');
+        showRegisterError('birthDate', 'You must be at least 18 years old to register');
         hasErrors = true;
     }
 
-    // Validar ciudad
+    // Validate city
     if (!formData.city) {
-        showRegisterError('city', 'La ciudad es requerida');
+        showRegisterError('city', 'The city is required');
         hasErrors = true;
     }
 
-    // Validar email
+    // Validate email
     if (!formData.email) {
-        showRegisterError('registerEmail', 'El email es requerido');
+        showRegisterError('registerEmail', 'The email is required');
         hasErrors = true;
     } else if (!validateEmail(formData.email)) {
-        showRegisterError('registerEmail', 'Por favor ingresa un email válido');
+        showRegisterError('registerEmail', 'Please enter a valid email');
         hasErrors = true;
     }
 
-    // Validar contraseña
+    // Validate password
     if (!formData.password) {
-        showRegisterError('registerPassword', 'La contraseña es requerida');
+        showRegisterError('registerPassword', 'The password is required');
         hasErrors = true;
     } else if (formData.password.length < 8) {
-        showRegisterError('registerPassword', 'La contraseña debe tener al menos 8 caracteres');
+        showRegisterError('registerPassword', 'The password must have at least 8 characters');
         hasErrors = true;
     }
 
-    // Validar confirmación de contraseña
+    // Validate confirm password
     if (!formData.confirmPassword) {
-        showRegisterError('registerPassword', 'Debes confirmar tu contraseña');
+        showRegisterError('registerPassword', 'You must confirm your password');
         hasErrors = true;
     } else if (formData.password !== formData.confirmPassword) {
-        showRegisterError('registerPassword', 'Las contraseñas no coinciden');
+        showRegisterError('registerPassword', 'The passwords do not match');
         hasErrors = true;
     }
 
     if (hasErrors) return;
 
-    // Deshabilitar botón y mostrar loading
+    // Disable button and show loading
     submitBtn.disabled = true;
-    submitBtn.textContent = 'Creando cuenta...';
+    submitBtn.textContent = 'Creating account...';
 
     try {
         const response = await registerUser(formData);
         
         if (response.success) {
-            // Registro exitoso
+            // Registration successful
             saveSession(response.data);
-            alert('¡Registro exitoso! Bienvenido a RoomieZ!');
+            alert('Registration successful! Welcome to RoomieZ!');
             hideRegisterModal();
             updateUIForAuthenticatedUser();
         } else {
             showRegisterError('registerEmail', response.message);
         }
     } catch (error) {
-        alert('Error en el registro. Please try again.');
+        alert('Error in registration. Please try again.');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';
     }
 }
 
-// ===== FUNCIÓN PRINCIPAL DE CARGA =====
+// ===== MAIN LOAD FUNCTION =====
 
 async function loadPublications(filter = 'all') {
     try {
@@ -1143,16 +1143,16 @@ async function loadPublications(filter = 'all') {
             throw new Error(response.message);
         }
     } catch (error) {
-        console.error('Error cargando publicaciones:', error);
+        console.error('Error loading publications:', error);
         hideLoading();
         const grid = document.getElementById('publicationsGrid');
         if (grid) {
             grid.innerHTML = `
             <div style="grid-column: 1 / -1; text-align: center; padding: 3rem; color: #666;">
-                <h3>Error al cargar las RoomZ</h3>
+                <h3>Error loading the RoomZ</h3>
                 <p>${error.message}</p>
                     <button onclick="window.loadPublications()" style="margin-top: 1rem; padding: 0.5rem 1rem; background: #49274A; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                    Reintentar
+                    Try again
                 </button>
             </div>
         `;
@@ -1160,9 +1160,9 @@ async function loadPublications(filter = 'all') {
     }
 }
 
-// ===== UTILIDADES DE CONSOLA PARA TESTING =====
+// ===== CONSOLE UTILITIES FOR TESTING =====
 
-// Exponer funciones para testing en consola
+// Expose functions for testing in console
 window.RoomZAuth = {
     login: loginUser,
     register: registerUser,
