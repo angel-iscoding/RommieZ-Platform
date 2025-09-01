@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Geist:wght@100..900&family=Ubuntu:ital,wght@0,300;0,400;0,500;0,700;1,300;1,400;1,500;1,700&display=swap" rel="stylesheet">
+
+    <title>RoomieZ - Dashboard</title>
+</head>
+
+
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <!-- Icon/Home Button -->
+            <button class="logo-btn" id="RoomZBtn" title="Go to home">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+
+            <!-- Search/Filter -->
+            <div class="search-filter">
+                <input 
+                    type="text" 
+                    class="filter-input" 
+                    id="filterInput"
+                    placeholder="Search RoomZ by title, location or price..."
+                >
+                <div class="filter-dropdown" id="filterDropdown">
+                    <div class="filter-option" data-filter="all">All RoomZ</div>
+                    <div class="filter-option" data-filter="available">Available</div>
+                    <div class="filter-option" data-filter="price-low">Price: Low to High</div>
+                    <div class="filter-option" data-filter="price-high">Price: High to Low</div>
+                </div>
+            </div>
+
+            <!-- Menu Button -->
+            <button aria-label="menu button" class="menu-btn" id="menuBtn">
+                <div class="menu-icon">
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                    <div class="menu-line"></div>
+                </div>
+                <div class="dropdown-menu" id="dropdownMenu">
+                    <div class="dropdown-item" id="loginBtn">Login</div>
+                    <div class="dropdown-item" id="configBtn">Settings</div>
+                    <div class="dropdown-item" id="logoutBtn">Logout</div>
+                </div>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <h1 class="page-title">RoomieZ</h1>
+        
+        <!-- Loading State -->
+        <div class="loading" id="loadingState">
+            <div class="spinner"></div>
+            <p>Loading available rooms...</p>
+        </div>
+
+        <!-- Publications Grid -->
+        <div class="publications-grid" id="publicationsGrid">
+            <!-- Publications will be dynamically loaded here -->
+        </div>
+
+        <div class="publications-grid" id="publicationsGrid2">
+            <!-- Additional publications will be dynamically loaded here -->
+        </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-btn" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Welcome to RoomieZ!</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="email" id="loginEmail" name="loginEmail" placeholder="Email address" required>
+                        <label for="loginEmail">Enter your email address</label>
+                        <div class="error-message" id="emailError"></div>
+                        <div class="success-message" id="emailSuccess"></div>
+                    </div>
+                    <div class="form-group" id="passwordSection" style="display: none;">
+                        <input type="password" id="loginPassword" name="loginPassword" placeholder="Password">
+                        <label for="loginPassword">Enter your password</label>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <button type="submit" id="loginSubmitBtn" class="primary-btn">Sign In</button>
+                </form>
+                
+                <div class="divider">
+                    <span>or</span>
+                </div>
+                
+                <!-- Social Login Buttons -->
+                <div class="social-login">
+                    <button type="button" id="googleLoginBtn" class="social-btn google-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                    <button type="button" id="appleLoginBtn" class="social-btn apple-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                        </svg>
+                        Continue with Apple
+                    </button>
+                    <button type="button" id="emailLoginBtn" class="social-btn email-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Continue with Email
+                    </button>
+                    <button type="button" id="facebookLoginBtn" class="social-btn facebook-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="back-btn" id="backToLoginBtn">←</button>
+                <button class="close-btn" id="closeRegisterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Complete Your Registration</h2>
+                
+                <form id="registerForm">
+                    <div class="section-title">Full Name</div>
+                    <div class="form-group">
+                        <input type="text" id="firstName" name="firstName" placeholder="First name as it appears on your ID" required>
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="lastName" name="lastName" placeholder="Last name as it appears on your ID" required>
+                    </div>
+                    <p class="form-note">Make sure this is your real name, using a fake name may result in penalties</p>
+                    
+                    <div class="section-title">Date of Birth</div>
+                    <div class="form-group">
+                        <input type="date" id="birthDate" name="birthDate" placeholder="Date of birth" required>
+                        <div class="error-message" id="birthDateError"></div>
+                    </div>
+                    <p class="form-note">You must be at least 18 years old to register. We don't share your birth date with other RoomieZ users.</p>
+                    
+                    <div class="section-title">City of Residence</div>
+                    <div class="form-group">
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                        <select id="citySelect" name="citySelect" class="city-select">
+                            <option value="">Select your city</option>
+                            <option value="Barranquilla">Barranquilla</option>
+                            <option value="Bogotá">Bogotá</option>
+                            <option value="Medellín">Medellín</option>
+                            <option value="Cartagena">Cartagena</option>
+                            <option value="Cali">Cali</option>
+                        </select>
+                        <div class="error-message" id="cityError"></div>
+                    </div>
+                    
+                    <div class="section-title">Password</div>
+                    <div class="form-group">
+                        <input type="password" id="registerPassword" name="registerPassword" placeholder="Password" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Confirm your password" required>
+                        <div class="error-message" id="registerPasswordError"></div>
+                    </div>
+                    
+                    <!-- Hidden email field that gets auto-filled -->
+                    <input type="hidden" id="registerEmail" name="registerEmail">
+                    
+                    <button type="submit" id="registerSubmitBtn" class="primary-btn">Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="index.js"></script>
+</body>
+</html>

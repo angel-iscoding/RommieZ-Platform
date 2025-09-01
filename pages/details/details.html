@@ -1,0 +1,451 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="details.css" />
+    <title>RoomieZ - Room Details</title>
+  </head>
+  <body>
+      <!-- Header -->
+      <div class="header">
+        <div class="header-content">
+          <button class="logo-btn" onclick="goToIndex()" title="Back to RoomieZ">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+            </svg>
+          </button>
+          <div class="search-filter">
+            <input 
+              type="text" 
+              class="filter-input" 
+              placeholder="Explore places"
+              id="searchInput"
+            />
+          </div>
+          <div class="menu-container">
+            <button class="menu-btn" id="menuBtn">
+              <div class="menu-icon">
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+                <div class="menu-line"></div>
+              </div>
+            </button>
+            <div class="dropdown-menu" id="dropdownMenu">
+              <div class="dropdown-item" id="loginBtn">Login</div>
+              <div class="dropdown-item" id="configBtn">Settings</div>
+              <div class="dropdown-item" id="logoutBtn">Logout</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div class="main-content">
+        <!-- Loading State -->
+      <div id="loading" class="loading">
+        <div class="loading-spinner"></div>
+        <p>Loading Roomz information...</p>
+      </div>
+
+      <!-- Error State -->
+      <div id="error" class="error hidden">
+        <h2>Error loading the information</h2>
+        <p id="error-message">No information could be loaded from Roomz.</p>
+        <div class="error-actions">
+          <button onclick="location.reload()" class="retry-btn">Try again</button>
+          <button onclick="testAPIManually()" class="test-api-btn">Test API</button>
+        </div>
+      </div>
+
+      <!-- Main Content -->
+      <div id="main-content" class="hidden">
+        <!-- Main Title -->
+        <h1 id="roomz-title" class="main-title">
+          Loading title...
+        </h1>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+          <!-- Left Column -->
+          <div class="left-column">
+            <!-- Image Gallery -->
+            <div class="image-gallery">
+              <div class="image-placeholder large">
+                <div class="camera-icon">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="image-placeholder">
+                <div class="camera-icon small">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M6.827 6.175A2.31 2.31 0 0 1 5.186 7.23c-.38.054-.757.112-1.134.175C2.999 7.58 2.25 8.507 2.25 9.574V18a2.25 2.25 0 0 0 2.25 2.25h15A2.25 2.25 0 0 0 21.75 18V9.574c0-1.067-.75-1.994-1.802-2.169a47.865 47.865 0 0 0-1.134-.175 2.31 2.31 0 0 1-1.64-1.055l-.822-1.316a2.192 2.192 0 0 0-1.736-1.039 48.774 48.774 0 0 0-5.232 0 2.192 2.192 0 0 0-1.736 1.039l-.821 1.316Z"
+                    />
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M16.5 12.75a4.5 4.5 0 1 1-9 0 4.5 4.5 0 0 1 9 0ZM18.75 10.5h.008v.008h-.008V10.5Z"
+                    />
+                  </svg>
+                </div>
+              </div>
+            </div>
+
+            <!-- Property Info -->
+            <div class="property-info">
+                <h2 id="roomz-subtitle">Loading subtitle...</h2>
+              <p id="roomz-details" class="property-details">Loading details...</p>
+
+              <!-- Host Info -->
+              <div class="host-info">
+                <div class="host-avatar">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    stroke-width="1.5"
+                    stroke="currentColor"
+                    class="size-6"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      d="M17.982 18.725A7.488 7.488 0 0 0 12 15.75a7.488 7.488 0 0 0-5.982 2.975m11.963 0a9 9 0 1 0-11.963 0m11.963 0A8.966 8.966 0 0 1 12 21a8.966 8.966 0 0 1-5.982-2.275M15 9.75a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
+                    />
+                  </svg>
+                </div>
+                <div class="host-details">
+                  <h3 id="host-name">Loading host...</h3>
+                  <p id="host-experience">Loading experience...</p>
+                </div>
+              </div>
+
+              <!-- Description -->
+              <div class="description">
+                <p id="roomz-description">
+                  Loading description...
+                </p>
+              </div>
+
+              <!-- Contact Info -->
+              <div class="contact-info">
+                <h3>Contact information</h3>
+                <div id="contact-links" class="contact-links">
+                  <p class="no-contacts">Loading contacts...</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Right Column -->
+          <div class="right-column">
+            <!-- Booking Card -->
+            <div class="booking-card">
+              <div class="price-section">
+                <span id="roomz-price" class="price">$0 COP</span>
+                <span class="price-period">por mes</span>
+              </div>
+
+              <div class="booking-form">
+                <div class="date-inputs">
+                  <div class="date-input">
+                    <label class="input-label">Arrival</label>
+                    <input
+                      aria-label="arrive"
+                      type="date"
+                      class="input-value"
+                      id="checkin"
+                    />
+                  </div>
+                  <div class="date-input">
+                    <label class="input-label">Departure</label>
+                    <input
+                      aria-label="go-out"
+                      type="date"
+                      class="input-value"
+                      id="checkout"
+                    />
+                  </div>
+                </div>
+                <div class="guest-input" onclick="toggleGuestDropdown()">
+                  <div>
+                    <label class="input-label">GUESTS</label>
+                    <span class="input-value" id="guest-display">1 huésped</span>
+                  </div>
+                  <div class="dropdown-arrow">▼</div>
+                  <div class="guest-dropdown" id="guest-dropdown">
+                    <div class="guest-counter">
+                      <span>guests</span>
+                      <div class="counter-controls">
+                        <button
+                          class="counter-btn"
+                          onclick="changeGuests(-1)"
+                          id="decrease-btn"
+                        >
+                          −
+                        </button>
+                        <span id="guest-count">1</span>
+                        <button class="counter-btn" onclick="changeGuests(1)">
+                          +
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button class="reserve-btn">Reserve</button>
+              <p class="no-charge-text">No charge anything for the moment</p>
+
+              <div class="price-breakdown">
+                <div class="price-row">
+                  <span id="price-breakdown-text">$0 COP x 1 month</span>
+                  <span id="price-breakdown-total">$0 COP</span>
+                </div>
+                <div class="price-row">
+                  <span>Service price</span>
+                  <span>$0 COP</span>
+                </div>
+                <div class="price-row total">
+                  <span>Total</span>
+                  <span id="price-total">$0 COP</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Reviews Section -->
+            <div class="reviews-section">
+              <div class="reviews-header">
+                <div class="star-icon">⭐</div>
+                <span class="rating">4.8</span>
+                <span class="review-count">(124 reviews)</span>
+              </div>
+              <div class="review-item">Excellent location</div>
+              <div class="review-item">Very good attention</div>
+            </div>
+          </div>
+        </div>
+      </div>
+      </div>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="close-btn" id="closeLoginModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Welcome to RoomieZ!</h2>
+                <form id="loginForm">
+                    <div class="form-group">
+                        <input type="email" id="loginEmail" name="loginEmail" placeholder="Email" required>
+                        <label for="loginEmail">Enter your email</label>
+                        <div class="error-message" id="emailError"></div>
+                        <div class="success-message" id="emailSuccess"></div>
+                    </div>
+                    <div class="form-group" id="passwordSection" style="display: none;">
+                        <input type="password" id="loginPassword" name="loginPassword" placeholder="Password">
+                        <label for="loginPassword">Enter your password</label>
+                        <div class="error-message" id="passwordError"></div>
+                    </div>
+                    <button type="submit" id="loginSubmitBtn" class="primary-btn">Start session</button>
+                </form>
+                
+                <div class="divider">
+                    <span>o</span>
+                </div>
+                
+                <!-- Social Login Buttons -->
+                <div class="social-login">
+                    <button type="button" id="googleLoginBtn" class="social-btn google-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24">
+                            <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                            <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                            <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                            <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                        </svg>
+                        Continue with Google
+                    </button>
+                    <button type="button" id="appleLoginBtn" class="social-btn apple-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M18.71 19.5c-.83 1.24-1.71 2.45-3.05 2.47-1.34.03-1.77-.79-3.29-.79-1.53 0-2 .77-3.27.82-1.31.05-2.3-1.32-3.14-2.53C4.25 17 2.94 12.45 4.7 9.39c.87-1.52 2.43-2.48 4.12-2.51 1.28-.02 2.5.87 3.29.87.78 0 2.26-1.07 3.81-.91.65.03 2.47.26 3.64 1.98-.09.06-2.17 1.28-2.15 3.81.03 3.02 2.65 4.03 2.68 4.04-.03.07-.42 1.44-1.38 2.83M13 3.5c.73-.83 1.94-1.46 2.94-1.5.13 1.17-.34 2.35-1.04 3.19-.69.85-1.83 1.51-2.95 1.42-.15-1.15.41-2.35 1.05-3.11z"/>
+                        </svg>
+                        Continue with Apple
+                    </button>
+                    <button type="button" id="emailLoginBtn" class="social-btn email-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Continue with Email
+                    </button>
+                    <button type="button" id="facebookLoginBtn" class="social-btn facebook-btn">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M24 12.073c0-6.627-5.373-12-12-12s-12 5.373-12 12c0 5.99 4.388 10.954 10.125 11.854v-8.385H7.078v-3.47h3.047V9.43c0-3.007 1.792-4.669 4.533-4.669 1.312 0 2.686.235 2.686.235v2.953H15.83c-1.491 0-1.956.925-1.956 1.874v2.25h3.328l-.532 3.47h-2.796v8.385C19.612 23.027 24 18.062 24 12.073z"/>
+                        </svg>
+                        Continue with Facebook
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button class="back-btn" id="backToLoginBtn">←</button>
+                <button class="close-btn" id="closeRegisterModal">&times;</button>
+            </div>
+            <div class="modal-body">
+                <h2 class="modal-title">Finish registering</h2>
+                
+                <form id="registerForm">
+                    <div class="section-title">Full name</div>
+                    <div class="form-group">
+                        <input type="text" id="firstName" name="firstName" placeholder="Full name as it appears on your ID" required>
+                        <div class="error-message" id="nameError"></div>
+                    </div>
+                    <div class="form-group">
+                        <input type="text" id="lastName" name="lastName" placeholder="Full name as it appears on your ID" required>
+                    </div>
+                    <p class="form-note">Make sure this is your real name, using a fake name may result in penalties</p>
+                    
+                    <div class="section-title">Date of birth</div>
+                    <div class="form-group">
+                        <input type="date" id="birthDate" name="birthDate" placeholder="Date of birth" required>
+                        <div class="error-message" id="birthDateError"></div>
+                    </div>
+                    <p class="form-note">You must be at least 18 years old to register. We don't share your birth date with other RoomieZ users.</p>
+                    
+                    <div class="section-title">City of residence</div>
+                    <div class="form-group">
+                        <input type="text" id="city" name="city" placeholder="City" required>
+                        <select id="citySelect" name="citySelect" class="city-select">
+                            <option value="">Select your city</option>
+                            <option value="Barranquilla">Barranquilla</option>
+                            <option value="Bogotá">Bogotá</option>
+                            <option value="Medellín">Medellín</option>
+                            <option value="Cartagena">Cartagena</option>
+                            <option value="Cali">Cali</option>
+                        </select>
+                        <div class="error-message" id="cityError"></div>
+                    </div>
+                    
+                    <div class="section-title">Password</div>
+                    <div class="form-group">
+                        <input type="password" id="registerPassword" name="registerPassword" placeholder="Password" required>
+                        <input type="password" id="confirmPassword" name="confirmPassword" placeholder="Enter your password" required>
+                        <div class="error-message" id="registerPasswordError"></div>
+                    </div>
+                    
+                    <!-- Email hidden that gets auto-filled -->
+                    <input type="hidden" id="registerEmail" name="registerEmail">
+                    
+                    <button type="submit" id="registerSubmitBtn" class="primary-btn">Continue</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../scripts/auth.js"></script>
+    <script src="details-auth.js"></script>
+    <script src="details.js"></script>
+  </body>
+</html>

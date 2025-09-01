@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Settings - RoomieZ</title>
+    <link rel="stylesheet" href="config.css">
+</head>
+<body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="logo-btn" onclick="goToIndex()" title="Back to RoomieZ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+            <h1 class="header-title">User Settings</h1>
+            <div class="header-actions">
+                <button class="logout-btn" onclick="logout()" title="Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <div class="sidebar-content">
+                <h1 class="sidebar-title">Settings</h1>
+                <div class="sidebar-item active" data-section="profile">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                    <span>My Profile</span>
+                </div>
+                <div class="sidebar-item" data-section="contacts">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
+                    </svg>
+                    <span>Contacts</span>
+                </div>
+                <div class="sidebar-item" data-section="roomz">
+                    <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9,22 9,12 15,12 15,22"></polyline>
+                    </svg>
+                    <span>My RoomZ</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <!-- Loading State -->
+            <div id="loading" class="loading">
+                <div class="spinner"></div>
+                <p>Loading settings...</p>
+            </div>
+
+            <!-- Error State -->
+            <div id="error" class="error hidden">
+                <h3>Error loading settings</h3>
+                <p id="errorMessage"></p>
+                <button id="retryBtn" class="btn-primary">Retry</button>
+            </div>
+
+            <!-- Content -->
+            <div id="content" class="content hidden">
+                <!-- Profile Section -->
+                <div id="profile-section" class="section active">
+                    <div class="section-header">
+                        <h2>My Profile</h2>
+                        <button id="editProfileBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                    </div>
+
+                    <div class="profile-content">
+                        <!-- Profile Image -->
+                        <div class="profile-image-container">
+                            <div class="profile-image-wrapper">
+                                <img id="profileImage" src="" alt="Profile" class="profile-image">
+                                <div id="profileImagePlaceholder" class="profile-image-placeholder">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"></path>
+                                        <circle cx="12" cy="13" r="4"></circle>
+                                    </svg>
+                                </div>
+                            </div>
+                            <p id="username" class="username"></p>
+                        </div>
+
+                        <!-- Profile Info -->
+                        <div class="profile-info">
+                            <div class="info-grid">
+                                <div class="info-field">
+                                    <label>Full Name:</label>
+                                    <div id="fullNameDisplay" class="info-value"></div>
+                                    <input aria-label="Full name" type="text" id="fullNameInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>City:</label>
+                                    <div id="cityDisplay" class="info-value"></div>
+                                    <input aria-label="City" type="text" id="cityInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Email:</label>
+                                    <div id="emailDisplay" class="info-value"></div>
+                                    <input aria-label="Email" type="email" id="emailInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Date of Birth:</label>
+                                    <div id="birthDateDisplay" class="info-value"></div>
+                                    <input aria-label="Date of birth" type="date" id="birthDateInput" class="info-input hidden">
+                                </div>
+
+                                <div class="info-field">
+                                    <label>Role:</label>
+                                    <div id="roleDisplay" class="info-value"></div>
+                                    <select id="roleInput" class="info-input hidden">
+                                        <option value="student">Student</option>
+                                        <option value="landlord">Landlord</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <!-- Edit Actions -->
+                            <div id="editActions" class="edit-actions hidden">
+                                                        <button id="cancelEditBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveProfileBtn" class="btn-primary">Save</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Contacts Section -->
+                <div id="contacts-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>Contact Information</h2>
+                        <button id="editContactsBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
+                                <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
+                            </svg>
+                            Edit
+                        </button>
+                    </div>
+
+                    <div class="contacts-content">
+                        <div class="info-grid">
+                            <div class="info-field">
+                                <label>Phone:</label>
+                                <div id="phoneDisplay" class="info-value"></div>
+                                <input aria-label="Phone" type="tel" id="phoneInput" class="info-input hidden" placeholder="+57 300 123 4567">
+                            </div>
+
+                            <div class="info-field">
+                                <label>WhatsApp:</label>
+                                <div id="whatsappDisplay" class="info-value"></div>
+                                <input aria-label="WhatsApp" type="tel" id="whatsappInput" class="info-input hidden" placeholder="+57 300 123 4567">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Instagram:</label>
+                                <div id="instagramDisplay" class="info-value"></div>
+                                <input aria-label="Instagram" type="url" id="instagramInput" class="info-input hidden" placeholder="https://www.instagram.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Facebook:</label>
+                                <div id="facebookDisplay" class="info-value"></div>
+                                <input aria-label="Facebook" type="url" id="facebookInput" class="info-input hidden" placeholder="https://www.facebook.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>Twitter:</label>
+                                <div id="twitterDisplay" class="info-value"></div>
+                                <input aria-label="Twitter" type="url" id="twitterInput" class="info-input hidden" placeholder="https://www.twitter.com/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>LinkedIn:</label>
+                                <div id="linkedinDisplay" class="info-value"></div>
+                                <input aria-label="LinkedIn" type="url" id="linkedinInput" class="info-input hidden" placeholder="https://www.linkedin.com/in/usuario">
+                            </div>
+
+                            <div class="info-field">
+                                <label>TikTok:</label>
+                                <div id="tiktokDisplay" class="info-value"></div>
+                                <input aria-label="TikTok" type="url" id="tiktokInput" class="info-input hidden" placeholder="https://www.tiktok.com/@usuario">
+                            </div>
+                        </div>
+
+                        <!-- Edit Actions -->
+                        <div id="editContactsActions" class="edit-actions hidden">
+                                                    <button id="cancelContactsBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveContactsBtn" class="btn-primary">Save</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- RoomZ Section -->
+                <div id="roomz-section" class="section hidden">
+                    <div class="section-header">
+                        <h2>My RoomZ</h2>
+                        <button id="addRoomzBtn" class="btn-secondary">
+                            <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <line x1="12" y1="5" x2="12" y2="19"></line>
+                                <line x1="5" y1="12" x2="19" y2="12"></line>
+                            </svg>
+                            Publish New
+                        </button>
+                    </div>
+
+                    <div id="roomzGrid" class="roomz-grid">
+                        <!-- RoomZ will be loaded here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal for editing/adding RoomZ -->
+    <div id="roomzModal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                                    <h3 id="modalTitle">Edit RoomZ</h3>
+                <button aria-label="cerrar" id="closeModalBtn" class="close-btn">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-field">
+                                                <label for="roomzTitle">Title:</label>
+                            <input type="text" id="roomzTitle" placeholder="RoomZ title" required>
+                </div>
+                <div class="form-field">
+                                                <label for="roomzSubtitle">Subtitle:</label>
+                            <input type="text" id="roomzSubtitle" placeholder="Descriptive subtitle" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzDetails">Details:</label>
+                    <input type="text" id="roomzDetails" placeholder="Included services" required>
+                </div>
+                <div class="form-field">
+                                                <label for="roomzDescription">Description:</label>
+                            <textarea id="roomzDescription" placeholder="Detailed description of the RoomZ" required></textarea>
+                </div>
+                <div class="form-field">
+                                                <label for="roomzAddress">Address:</label>
+                            <input type="text" id="roomzAddress" placeholder="Complete address" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzPrice">Price (COP):</label>
+                    <input type="number" id="roomzPrice" placeholder="250000" min="0" required>
+                </div>
+                <div class="form-field">
+                    <label for="roomzType">Type:</label>
+                    <select id="roomzType" required>
+                        <option value="studio">Studio</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="residential_complex">Residential Complex</option>
+                    </select>
+                </div>
+                <div class="form-field">
+                                                <label for="roomzAvailable">Available:</label>
+                    <select id="roomzAvailable" required>
+                                                        <option value="true">Yes</option>
+                        <option value="false">No</option>
+                    </select>
+                </div>
+            </div>
+            <div class="modal-actions">
+                                        <button id="cancelRoomzBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveRoomzBtn" class="btn-primary">Save</button>
+                        <button id="deleteRoomzBtn" class="btn-danger hidden">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../../scripts/auth.js"></script>
+    <script src="config.js"></script>
+</body>
+</html>

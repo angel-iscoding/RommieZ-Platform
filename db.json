@@ -1,0 +1,850 @@
+{
+    "api_info": {
+      "version": "V1",
+      "description": "RommieZ API - All endpoint example responses",
+      "base_url": "http://localhost:3010/api/V1"
+    },
+    "endpoints": {
+      "root": {
+        "GET /": {
+          "status": 200,
+          "response": "Server listening on endpoint: localhost:3010/api/V1"
+        }
+      },
+      "users": {
+        "GET /users": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "Users retrieved successfully",
+              "data": [
+      {
+        "id": 1,
+        "first_name": "John",
+        "middle_name": "Michael",
+        "last_name": "Doe",
+        "username": "johndoe",
+        "email": "john.doe@email.com",
+        "password": "hashedpass123",
+                  "city": "Barranquilla",
+                  "birthdate": "1998-05-15",
+        "role": "student",
+                  "created_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+        "first_name": "Anna",
+        "middle_name": null,
+        "last_name": "Smith",
+        "username": "annasmith",
+        "email": "anna.smith@email.com",
+        "password": "hashedpass456",
+                  "city": "Barranquilla",
+                  "birthdate": "1985-03-20",
+        "role": "landlord",
+                  "created_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 3,
+        "first_name": "Carlos",
+        "middle_name": "Andres",
+        "last_name": "Lopez",
+        "username": "carloslopez",
+        "email": "carlos.lopez@email.com",
+        "password": "hashedpass789",
+                  "city": "Barranquilla",
+                  "birthdate": "1999-11-10",
+                  "role": "student",
+                  "created_at": "2025-01-08T10:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "no_users": {
+            "status": 404,
+            "response": {
+              "message": "No users found.",
+              "data": []
+            }
+          }
+        },
+        "GET /users/:id": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "User retrieved successfully",
+              "data": {
+                "id": 1,
+                "first_name": "John",
+                "middle_name": "Michael",
+                "last_name": "Doe",
+                "username": "johndoe",
+                "email": "john.doe@email.com",
+                "password": "hashedpass123",
+                "city": "Barranquilla",
+                "birthdate": "1998-05-15",
+        "role": "student",
+                "created_at": "2025-01-08T10:30:00.000Z"
+              }
+            }
+          },
+          "user_not_found": {
+            "status": 404,
+            "response": {
+              "error": "User not found"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "GET /users/:id/exists": {
+          "user_exists": {
+            "status": 200,
+            "response": {
+              "message": "User existence checked",
+              "exists": true
+            }
+          },
+          "user_not_exists": {
+            "status": 200,
+            "response": {
+              "message": "User existence checked",
+              "exists": false
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "GET /users/:id/contacts": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "User contacts retrieved successfully",
+              "data": {
+                "id": 1,
+                "user_id": 1,
+                "phone_number": "+57 300 123 4567",
+                "whatsapp_number": "+57 300 123 4567",
+                "instagram_url": "https://www.instagram.com/john_doe_2025",
+                "facebook_url": "https://www.facebook.com/john.doe.student",
+                "twitter_url": "https://www.twitter.com/johndoe2025",
+                "tiktok_url": "https://www.tiktok.com/@john_doe_official",
+                "linkedin_url": "https://www.linkedin.com/in/john-doe-student",
+                "created_at": "2025-01-08T10:30:00.000Z",
+                "updated_at": "2025-01-08T10:30:00.000Z"
+              }
+            }
+          },
+          "no_contacts": {
+            "status": 404,
+            "response": {
+              "message": "No social contacts found for this user",
+              "data": null
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "POST /users/check-email": {
+          "email_registered": {
+            "status": 200,
+            "request_body": {
+              "email": "john.doe@email.com"
+            },
+            "response": {
+              "message": "Email registration checked",
+              "isRegistered": true
+            }
+          },
+          "email_not_registered": {
+            "status": 200,
+            "request_body": {
+              "email": "newuser@email.com"
+            },
+            "response": {
+              "message": "Email registration checked",
+              "isRegistered": false
+            }
+          },
+          "email_required": {
+            "status": 400,
+            "request_body": {},
+            "response": {
+              "error": "Email is required"
+            }
+          }
+        },
+        "POST /users": {
+          "success": {
+            "status": 201,
+            "request_body": {
+              "first_name": "Maria",
+              "middle_name": "Isabel",
+              "last_name": "Rodriguez",
+              "username": "mariarodriguez",
+              "email": "maria.rodriguez@email.com",
+              "password": "securepassword123",
+              "city": "Cartagena",
+              "birthdate": "1997-08-15",
+              "role": "student"
+            },
+            "response": {
+              "message": "User created successfully",
+              "userId": 4
+            }
+          },
+          "email_already_exists": {
+            "status": 400,
+            "request_body": {
+              "first_name": "Test",
+              "last_name": "User",
+              "username": "testuser",
+              "email": "john.doe@email.com",
+              "password": "password123",
+              "city": "Bogotá",
+              "birthdate": "1995-01-01",
+              "role": "student"
+            },
+            "response": {
+              "error": "Email is already registered"
+            }
+          },
+          "missing_fields": {
+            "status": 400,
+            "request_body": {
+              "first_name": "Test",
+              "email": "test@email.com"
+            },
+            "response": {
+              "error": "All required fields must be provided"
+            }
+          }
+        },
+        "PUT /users/:id": {
+          "success": {
+            "status": 200,
+            "request_body": {
+              "first_name": "John",
+              "middle_name": "Michael",
+              "last_name": "Doe",
+              "city": "Medellín",
+              "email": "john.doe.updated@email.com",
+              "birthdate": "1998-05-15"
+            },
+            "response": {
+              "message": "User updated successfully"
+            }
+          },
+          "user_not_found": {
+            "status": 404,
+            "response": {
+              "error": "User not found"
+            }
+          },
+          "email_already_exists": {
+            "status": 400,
+            "request_body": {
+              "first_name": "John",
+              "last_name": "Doe",
+              "city": "Medellín",
+              "email": "anna.smith@email.com",
+              "birthdate": "1998-05-15"
+            },
+            "response": {
+              "error": "Email is already registered by another user"
+            }
+          },
+          "missing_fields": {
+            "status": 400,
+            "request_body": {
+              "first_name": "John"
+            },
+            "response": {
+              "error": "All fields are required (first_name, last_name, city, email, birthdate)"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "POST /users/:id/contacts": {
+          "success_create": {
+            "status": 201,
+            "request_body": {
+              "phone_number": "+57 320 111 2222",
+              "whatsapp_number": "+57 320 111 2222",
+              "instagram_url": "https://www.instagram.com/new_user_profile",
+              "facebook_url": "https://www.facebook.com/new.user.profile",
+              "linkedin_url": "https://www.linkedin.com/in/new-user-profile"
+            },
+            "response": {
+              "message": "User contacts created successfully",
+              "contactId": 5
+            }
+          },
+          "success_update": {
+            "status": 200,
+            "request_body": {
+              "phone_number": "+57 320 111 3333",
+              "whatsapp_number": "+57 320 111 3333",
+              "instagram_url": "https://www.instagram.com/updated_profile"
+            },
+            "response": {
+              "message": "User contacts updated successfully"
+            }
+          },
+          "user_not_found": {
+            "status": 404,
+            "response": {
+              "error": "User not found"
+            }
+          },
+          "no_contact_provided": {
+            "status": 400,
+            "request_body": {},
+            "response": {
+              "error": "At least one contact method must be provided"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "DELETE /users/:id": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "User deleted successfully"
+            }
+          },
+          "user_not_found": {
+            "status": 404,
+            "response": {
+              "error": "User not found"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        }
+      },
+      "roomz": {
+        "GET /roomz": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "Roomz retrieved successfully",
+              "roomz": [
+      {
+        "id": 1,
+        "user_id": 2,
+        "title": "Room near University",
+                  "subtitle": "Cozy student accommodation",
+                  "details": "Internet, utilities included",
+        "description": "A cozy room close to campus with internet and utilities included.",
+        "address": "123 Main St, City",
+                  "price": "350.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+        "user_id": 2,
+        "title": "Shared apartment",
+                  "subtitle": "Shared living space",
+                  "details": "Utilities included",
+        "description": "One bed available in a shared apartment, utilities included.",
+        "address": "456 College Ave, City",
+                  "price": "250.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 3,
+        "user_id": 2,
+        "title": "Studio apartment downtown",
+                  "subtitle": "Modern city center studio",
+                  "details": "Fully furnished",
+                  "description": "Modern studio in city center, fully furnished with all amenities.",
+                  "address": "789 Downtown Blvd, City",
+                  "price": "450.00",
+                  "roomz_type": "studio",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "no_roomz": {
+            "status": 404,
+            "response": {
+              "message": "No roomz found.",
+              "roomz": []
+            }
+          }
+        },
+        "GET /roomz/user/:id": {
+          "success": {
+            "status": 200,
+            "response": {
+              "roomz": [
+                {
+                  "id": 1,
+                  "user_id": 2,
+                  "title": "Room near University",
+                  "subtitle": "Cozy student accommodation",
+                  "details": "Internet, utilities included",
+                  "description": "A cozy room close to campus with internet and utilities included.",
+                  "address": "123 Main St, City",
+                  "price": "350.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+                },
+                {
+                  "id": 2,
+                  "user_id": 2,
+                  "title": "Shared apartment",
+                  "subtitle": "Shared living space",
+                  "details": "Utilities included",
+                  "description": "One bed available in a shared apartment, utilities included.",
+                  "address": "456 College Ave, City",
+                  "price": "250.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "no_roomz": {
+            "status": 404,
+            "response": {
+              "message": "No roomz found for this user.",
+              "roomz": []
+            }
+          },
+          "user_not_found": {
+            "status": 404,
+            "response": {
+              "error": "User not found"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "GET /roomz/type/:type": {
+          "success_studio": {
+            "status": 200,
+            "response": {
+              "message": "studio roomz retrieved successfully",
+              "roomz": [
+                {
+                  "id": 3,
+                  "user_id": 2,
+                  "title": "Studio apartment downtown",
+                  "subtitle": "Modern city center studio",
+                  "details": "Fully furnished",
+        "description": "Modern studio in city center, fully furnished with all amenities.",
+        "address": "789 Downtown Blvd, City",
+                  "price": "450.00",
+                  "roomz_type": "studio",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "success_apartment": {
+            "status": 200,
+            "response": {
+              "message": "apartment roomz retrieved successfully",
+              "roomz": [
+      {
+        "id": 1,
+                  "user_id": 2,
+                  "title": "Room near University",
+                  "subtitle": "Cozy student accommodation",
+                  "details": "Internet, utilities included",
+                  "description": "A cozy room close to campus with internet and utilities included.",
+                  "address": "123 Main St, City",
+                  "price": "350.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+                  "user_id": 2,
+                  "title": "Shared apartment",
+                  "subtitle": "Shared living space",
+                  "details": "Utilities included",
+                  "description": "One bed available in a shared apartment, utilities included.",
+                  "address": "456 College Ave, City",
+                  "price": "250.00",
+                  "roomz_type": "apartment",
+                  "is_available": 1,
+                  "published_at": "2025-01-08T10:30:00.000Z"
+                }
+              ]
+            }
+          },
+          "no_roomz_of_type": {
+            "status": 404,
+            "response": {
+              "message": "No residential_complex roomz found.",
+              "roomz": []
+            }
+          },
+          "invalid_type": {
+            "status": 400,
+            "response": {
+              "error": "Invalid roomz type. Valid types are: studio, apartment, residential_complex"
+            }
+          }
+        },
+        "GET /roomz/:id": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "Room retrieved successfully",
+              "room": {
+                "id": 1,
+                "user_id": 2,
+                "title": "Room near University",
+                "subtitle": "Cozy student accommodation",
+                "details": "Internet, utilities included",
+                "description": "A cozy room close to campus with internet and utilities included.",
+                "address": "123 Main St, City",
+                "price": "350.00",
+                "roomz_type": "apartment",
+                "is_available": 1,
+                "published_at": "2025-01-08T10:30:00.000Z"
+              }
+            }
+          },
+          "room_not_found": {
+            "status": 404,
+            "response": {
+              "error": "Room not found"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "POST /roomz": {
+          "success": {
+            "status": 201,
+            "request_body": {
+              "user_id": 2,
+              "title": "Luxury Penthouse",
+              "subtitle": "High-end living space",
+              "details": "Pool, gym, security",
+              "description": "Luxurious penthouse with amazing city views, pool access, gym and 24/7 security.",
+              "address": "999 Elite Boulevard, Barranquilla",
+              "price": 850.50,
+              "roomz_type": "residential_complex",
+              "is_available": true
+            },
+            "response": {
+              "message": "Room created successfully",
+              "roomId": 4
+            }
+          },
+          "missing_fields": {
+            "status": 400,
+            "request_body": {
+              "user_id": 2,
+              "title": "Incomplete Room"
+            },
+            "response": {
+              "error": "All fields are required (user_id, title, subtitle, details, description, address, price, roomz_type, is_available)"
+            }
+          },
+          "invalid_type": {
+            "status": 400,
+            "request_body": {
+              "user_id": 2,
+              "title": "Test Room",
+              "subtitle": "Test",
+              "details": "Test",
+              "description": "Test description",
+              "address": "Test address",
+              "price": 300,
+              "roomz_type": "invalid_type",
+              "is_available": true
+            },
+            "response": {
+              "error": "Invalid roomz type. Valid types are: studio, apartment, residential_complex"
+            }
+          }
+        },
+        "PUT /roomz/:id": {
+          "success": {
+            "status": 200,
+            "request_body": {
+              "user_id": 2,
+              "title": "Updated Room Title",
+              "subtitle": "Updated subtitle",
+              "details": "Updated details",
+              "description": "Updated description with new amenities and features.",
+              "address": "123 Updated Street, Barranquilla",
+              "price": 400.00,
+              "roomz_type": "apartment",
+              "is_available": true
+            },
+            "response": {
+              "message": "Room updated successfully"
+            }
+          },
+          "room_not_found": {
+            "status": 404,
+            "response": {
+              "error": "Room not found"
+            }
+          },
+          "missing_fields": {
+            "status": 400,
+            "request_body": {
+              "title": "Incomplete Update"
+            },
+            "response": {
+              "error": "All fields are required (user_id, title, subtitle, details, description, address, price, roomz_type, is_available)"
+            }
+          },
+          "invalid_type": {
+            "status": 400,
+            "request_body": {
+              "user_id": 2,
+              "title": "Test Room",
+              "subtitle": "Test",
+              "details": "Test",
+              "description": "Test description",
+              "address": "Test address",
+              "price": 300,
+              "roomz_type": "invalid_type",
+              "is_available": true
+            },
+            "response": {
+              "error": "Invalid roomz type. Valid types are: studio, apartment, residential_complex"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        },
+        "DELETE /roomz/:id": {
+          "success": {
+            "status": 200,
+            "response": {
+              "message": "Room deleted successfully"
+            }
+          },
+          "room_not_found": {
+            "status": 404,
+            "response": {
+              "error": "Room not found"
+            }
+          },
+          "invalid_id": {
+            "status": 400,
+            "response": {
+              "error": "You need to enter a valid numeric id"
+            }
+          }
+        }
+      }
+    },
+    "common_errors": {
+      "internal_server_error": {
+        "status": 500,
+        "response": {
+          "error": "Internal server error",
+          "details": "Specific error message describing what went wrong"
+        }
+      },
+      "database_connection_error": {
+        "status": 500,
+        "response": {
+          "error": "Internal server error",
+          "details": "Table 'RoomieZ.users' doesn't exist"
+        }
+      }
+    },
+    "sample_data": {
+      "users": [
+        {
+          "id": 1,
+          "first_name": "John",
+          "middle_name": "Michael",
+          "last_name": "Doe",
+          "username": "johndoe",
+          "email": "john.doe@email.com",
+          "password": "hashedpass123",
+          "city": "Barranquilla",
+          "birthdate": "1998-05-15",
+          "role": "student",
+          "created_at": "2025-01-08T10:30:00.000Z"
+        },
+        {
+          "id": 2,
+          "first_name": "Anna",
+          "middle_name": null,
+          "last_name": "Smith",
+          "username": "annasmith",
+          "email": "anna.smith@email.com",
+          "password": "hashedpass456",
+          "city": "Barranquilla",
+          "birthdate": "1985-03-20",
+          "role": "landlord",
+          "created_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 3,
+          "first_name": "Carlos",
+          "middle_name": "Andres",
+          "last_name": "Lopez",
+          "username": "carloslopez",
+          "email": "carlos.lopez@email.com",
+          "password": "hashedpass789",
+          "city": "Barranquilla",
+          "birthdate": "1999-11-10",
+          "role": "student",
+          "created_at": "2025-01-08T10:30:00.000Z"
+        }
+      ],
+      "roomz": [
+      {
+        "id": 1,
+          "user_id": 2,
+          "title": "Room near University",
+          "subtitle": "Cozy student accommodation",
+          "details": "Internet, utilities included",
+          "description": "A cozy room close to campus with internet and utilities included.",
+          "address": "123 Main St, City",
+          "price": "350.00",
+          "roomz_type": "apartment",
+          "is_available": 1,
+          "published_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+          "user_id": 2,
+          "title": "Shared apartment",
+          "subtitle": "Shared living space",
+          "details": "Utilities included",
+          "description": "One bed available in a shared apartment, utilities included.",
+          "address": "456 College Ave, City",
+          "price": "250.00",
+          "roomz_type": "apartment",
+          "is_available": 1,
+          "published_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 3,
+          "user_id": 2,
+          "title": "Studio apartment downtown",
+          "subtitle": "Modern city center studio",
+          "details": "Fully furnished",
+          "description": "Modern studio in city center, fully furnished with all amenities.",
+          "address": "789 Downtown Blvd, City",
+          "price": "450.00",
+          "roomz_type": "studio",
+          "is_available": 1,
+          "published_at": "2025-01-08T10:30:00.000Z"
+        }
+      ],
+      "contacts": [
+      {
+        "id": 1,
+        "user_id": 1,
+          "phone_number": "+57 300 123 4567",
+          "whatsapp_number": "+57 300 123 4567",
+          "instagram_url": "https://www.instagram.com/john_doe_2025",
+          "facebook_url": "https://www.facebook.com/john.doe.student",
+          "twitter_url": "https://www.twitter.com/johndoe2025",
+          "tiktok_url": "https://www.tiktok.com/@john_doe_official",
+          "linkedin_url": "https://www.linkedin.com/in/john-doe-student",
+          "created_at": "2025-01-08T10:30:00.000Z",
+          "updated_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 2,
+          "user_id": 2,
+          "phone_number": "+57 305 987 6543",
+          "whatsapp_number": "+57 305 987 6543",
+          "instagram_url": "https://www.instagram.com/anna_rooms_barranquilla",
+          "facebook_url": "https://www.facebook.com/anna.smith.landlord",
+          "twitter_url": null,
+          "tiktok_url": null,
+          "linkedin_url": "https://www.linkedin.com/in/anna-smith-properties",
+          "created_at": "2025-01-08T10:30:00.000Z",
+          "updated_at": "2025-01-08T10:30:00.000Z"
+      },
+      {
+        "id": 3,
+          "user_id": 3,
+          "phone_number": null,
+          "whatsapp_number": "+57 310 456 7890",
+          "instagram_url": "https://www.instagram.com/carlos_lopez_univ",
+          "facebook_url": null,
+          "twitter_url": "https://www.x.com/carloslopez2025",
+          "tiktok_url": "https://www.tiktok.com/@carlos_student_life",
+          "linkedin_url": null,
+          "created_at": "2025-01-08T10:30:00.000Z",
+          "updated_at": "2025-01-08T10:30:00.000Z"
+        }
+      ]
+    },
+    "validation_rules": {
+      "users": {
+        "required_fields": ["first_name", "last_name", "username", "email", "password", "city", "birthdate", "role"],
+        "optional_fields": ["middle_name"],
+        "role_values": ["student", "landlord"],
+        "unique_fields": ["username", "email"]
+      },
+      "roomz": {
+        "required_fields": ["user_id", "title", "subtitle", "details", "description", "address", "price", "roomz_type", "is_available"],
+        "roomz_type_values": ["studio", "apartment", "residential_complex"]
+      },
+      "contacts": {
+        "required_fields": ["at least one contact method"],
+        "optional_fields": ["phone_number", "whatsapp_number", "instagram_url", "facebook_url", "twitter_url", "tiktok_url", "linkedin_url"],
+        "constraint": "At least one contact method must be provided"
+      }
+    }
+  }
