@@ -215,9 +215,12 @@ function resetLoginForm() {
     const submitBtn = document.getElementById('loginSubmitBtn');
     
     if (emailInput) emailInput.value = '';
-    if (passwordInput) passwordInput.value = '';
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.removeAttribute('required');
+    }
     if (passwordSection) passwordSection.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Continue';
+    if (submitBtn) submitBtn.textContent = 'Inicia sección';
     clearLoginErrors();
 }
 
@@ -380,14 +383,19 @@ async function handleLoginSubmit(e) {
             if (response.exists) {
                 showEmailSuccess('¡Email encontrado! Ingresa tu contraseña');
                 passwordSection.style.display = 'block';
-                submitBtn.textContent = 'Sign In';
-                document.getElementById('loginPassword').focus();
+                // Agregar required al campo de contraseña cuando se muestre
+                const passwordInput = document.getElementById('loginPassword');
+                if (passwordInput) passwordInput.setAttribute('required', 'true');
+                submitBtn.textContent = 'Inicia sección';
+                passwordInput.focus();
             } else {
-                showLoginError('email', 'Email no encontrado. ¿Te gustaría registrarte?');
-                setTimeout(() => {
-                    hideLoginModal();
-                    showRegisterModal();
-                }, 2000);
+                hideLoginModal();
+                showRegisterModal();
+                // Pre-llenar el email en el formulario de registro
+                const registerEmailField = document.getElementById('registerEmail');
+                if (registerEmailField) {
+                    registerEmailField.value = email;
+                }
             }
         } catch (error) {
             showLoginError('email', 'Error al verificar el email. Intenta de nuevo.');

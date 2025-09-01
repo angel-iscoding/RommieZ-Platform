@@ -1,4 +1,4 @@
-// ===== CONFIGURACIÓN DE API =====
+// ===== API CONFIGURATION =====
 
 const API_CONFIG = {
     BASE_URL: 'http://localhost:3010/api/V1',
@@ -10,13 +10,13 @@ const API_CONFIG = {
     }
 };
 
-// Estado global de autenticación
+// Global authentication state
 let currentUser = null;
 let isAuthenticated = false;
 
-// ===== FUNCIONES DE API =====
+// ===== API FUNCTIONS =====
 
-// Función auxiliar para manejar respuestas de la API
+// Helper function to handle API responses
 async function handleApiResponse(response) {
     const data = await response.json();
     
@@ -27,7 +27,7 @@ async function handleApiResponse(response) {
     return data;
 }
 
-// Función para verificar si el email existe
+// Function to check if email exists
 async function checkEmailExists(email) {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.CHECK_EMAIL}`, {
@@ -43,19 +43,19 @@ async function checkEmailExists(email) {
         return {
             success: true,
             exists: data.isRegistered,
-            message: data.isRegistered ? 'Email encontrado en la base de datos' : 'Email no encontrado'
+            message: data.isRegistered ? 'Email found in database' : 'Email not found'
         };
     } catch (error) {
         console.error('Error checking email:', error);
         return {
             success: false,
             exists: false,
-            message: 'Error al verificar email'
+            message: 'Error verifying email'
         };
     }
 }
 
-// Función para login de usuario
+// Function for user login
 async function loginUser(email, password) {
     try {
         // Primero verificamos que el email existe
@@ -86,24 +86,24 @@ async function loginUser(email, password) {
                     city: user.city,
                     birthdate: user.birthdate
                     },
-                    message: 'Inicio de sesión exitoso'
+                    message: 'Login successful'
             };
             } else {
             return {
                     success: false,
-                message: 'Contraseña incorrecta'
+                message: 'Incorrect password'
             };
         }
     } catch (error) {
         console.error('Error during login:', error);
         return {
             success: false,
-            message: 'Error de conexión. Intenta de nuevo.'
+            message: 'Connection error. Please try again.'
         };
     }
 }
 
-// Función para registro de usuario
+// Function for registro de usuario
 async function registerUser(userData) {
     try {
             // Verificar si el email ya existe
@@ -170,14 +170,14 @@ async function registerUser(userData) {
         console.error('Error during registration:', error);
         return {
             success: false,
-            message: error.message || 'Error de conexión. Intenta de nuevo.'
+            message: error.message || 'Error de conexión. Please try again.'
         };
     }
 }
 
 // ===== FUNCIONES DE ROOMZ (PUBLICACIONES) =====
 
-// Función para obtener todas las roomz
+// Function for obtener todas las roomz
 async function fetchRoomz(filter = 'all') {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ROOMZ}`);
@@ -228,7 +228,7 @@ async function fetchRoomz(filter = 'all') {
     }
 }
 
-// Función para buscar roomz
+// Function for buscar roomz
 async function searchRoomz(query) {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ROOMZ}`);
@@ -275,7 +275,7 @@ async function searchRoomz(query) {
     }
 }
 
-// Función para obtener una roomz específica
+// Function for obtener una roomz específica
 async function getRoomById(id) {
     try {
         const response = await fetch(`${API_CONFIG.BASE_URL}${API_CONFIG.ENDPOINTS.ROOMZ}/${id}`);
@@ -394,7 +394,7 @@ function validateAge(birthDate) {
 
 // ===== FUNCIONES DE UI =====
 
-// Función para renderizar publicaciones
+// Function for renderizar publicaciones
 function renderPublications(publications) {
     const grid = document.getElementById('publicationsGrid');
     
@@ -435,7 +435,7 @@ function renderPublications(publications) {
     `).join('');
 }
 
-// Función para mostrar estado de carga
+// Function for mostrar estado de carga
 function showLoading() {
     const loadingState = document.getElementById('loadingState');
     const publicationsGrid = document.getElementById('publicationsGrid');
@@ -444,7 +444,7 @@ function showLoading() {
     if (publicationsGrid) publicationsGrid.style.display = 'none';
 }
 
-// Función para ocultar estado de carga
+// Function for ocultar estado de carga
 function hideLoading() {
     const loadingState = document.getElementById('loadingState');
     const publicationsGrid = document.getElementById('publicationsGrid');
@@ -501,9 +501,12 @@ function resetLoginForm() {
     const submitBtn = document.getElementById('loginSubmitBtn');
     
     if (emailInput) emailInput.value = '';
-    if (passwordInput) passwordInput.value = '';
+    if (passwordInput) {
+        passwordInput.value = '';
+        passwordInput.removeAttribute('required');
+    }
     if (passwordSection) passwordSection.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Continue';
+    if (submitBtn) submitBtn.textContent = 'Inicia sección';
     clearLoginErrors();
 }
 
@@ -606,7 +609,7 @@ function showRegisterError(field, message) {
 
 // ===== FUNCIONES DE NAVEGACIÓN Y REDIRECCIÓN =====
 
-// Función para redireccionar a páginas
+// Function for redireccionar a páginas
 function redirectTo(path, params = {}) {
     let url = path;
     
@@ -619,7 +622,7 @@ function redirectTo(path, params = {}) {
     window.location.href = url;
 }
 
-// Función para verificar autenticación antes de acceso
+// Function for verificar autenticación antes de acceso
 function requireAuth(redirectPath = 'index.html') {
     if (!isAuthenticated || !currentUser) {
         alert('Debes iniciar sesión para acceder a esta funcionalidad');
@@ -631,12 +634,11 @@ function requireAuth(redirectPath = 'index.html') {
 
 // Manejar click en publicación - FUNCIÓN GLOBAL
 window.handlePublicationClick = function(publicationId) {
-    console.log(`Click en RoomZ ID: ${publicationId}`);
     // Navegar a detalles sin requerir autenticación previa
-    redirectTo('pages/details/details.html', { roomId: publicationId });
+    redirectTo('pages/details/details.html', { id: publicationId });
 };
 
-// Función para navegar a configuración
+// Function for navegar a configuración
 function navigateToConfig() {
     if (!requireAuth()) {
         return;
@@ -645,7 +647,7 @@ function navigateToConfig() {
     redirectTo('pages/config/config.html', { userId: currentUser.id });
 }
 
-// Función para obtener parámetros de la URL
+// Function for obtener parámetros de la URL
 function getUrlParams() {
     const params = new URLSearchParams(window.location.search);
     const result = {};
@@ -770,7 +772,6 @@ document.addEventListener('DOMContentLoaded', async function() {
         // Debounce de búsqueda
         searchTimeout = setTimeout(async () => {
             if (query.length > 2) {
-                console.log(`Búsqueda: "${query}"`);
                 showLoading();
                 const response = await searchRoomz(query);
                 hideLoading();
@@ -826,11 +827,31 @@ document.addEventListener('DOMContentLoaded', async function() {
     });
     }
 
-    if (switchToLoginBtn) {
+        if (switchToLoginBtn) {
         switchToLoginBtn.addEventListener('click', function() {
         hideRegisterModal();
         showLoginModal();
     });
+    }
+
+    // Botón de volver en el modal de registro
+    const backToLoginBtn = document.getElementById('backToLoginBtn');
+    if (backToLoginBtn) {
+        backToLoginBtn.addEventListener('click', function() {
+            hideRegisterModal();
+            showLoginModal();
+        });
+    }
+
+    // Selector de ciudad
+    const citySelect = document.getElementById('citySelect');
+    const cityInput = document.getElementById('city');
+    if (citySelect && cityInput) {
+        citySelect.addEventListener('change', function() {
+            if (this.value) {
+                cityInput.value = this.value;
+            }
+        });
     }
 
     // Cerrar modales al hacer click en el overlay
@@ -915,7 +936,6 @@ document.addEventListener('DOMContentLoaded', async function() {
 // Manejar envío del formulario de login
 async function handleLoginSubmit(e) {
     e.preventDefault();
-    console.log('Login form submitted'); // Debug log
     
     const email = document.getElementById('loginEmail').value.trim();
     const passwordSection = document.getElementById('passwordSection');
@@ -949,18 +969,23 @@ async function handleLoginSubmit(e) {
                 // Email encontrado, mostrar campo de contraseña
                 showEmailSuccess('¡Email encontrado! Ingresa tu contraseña');
                 passwordSection.style.display = 'block';
-                submitBtn.textContent = 'Sign In';
-                document.getElementById('loginPassword').focus();
+                // Agregar required al campo de contraseña cuando se muestre
+                const passwordInput = document.getElementById('loginPassword');
+                if (passwordInput) passwordInput.setAttribute('required', 'true');
+                submitBtn.textContent = 'Inicia sección';
+                passwordInput.focus();
             } else {
-                // Email no encontrado, sugerir registro
-                showLoginError('email', 'Email no encontrado. ¿Te gustaría registrarte?');
-                setTimeout(() => {
+                // Email no encontrado, abrir modal de registro con email prellenado
                     hideLoginModal();
                     showRegisterModal();
-                }, 2000);
+                // Pre-llenar el email en el formulario de registro
+                const registerEmailField = document.getElementById('registerEmail');
+                if (registerEmailField) {
+                    registerEmailField.value = email;
+                }
             }
         } catch (error) {
-            showLoginError('email', 'Error al verificar el email. Intenta de nuevo.');
+            showLoginError('email', 'Error al verificar el email. Please try again.');
         } finally {
             submitBtn.disabled = false;
         }
@@ -995,7 +1020,7 @@ async function handleLoginSubmit(e) {
                 showLoginError('password', response.message);
             }
         } catch (error) {
-            showLoginError('password', 'Error al iniciar sesión. Intenta de nuevo.');
+            showLoginError('password', 'Error al iniciar sesión. Please try again.');
         } finally {
             submitBtn.disabled = false;
             submitBtn.textContent = 'Sign In';
@@ -1006,15 +1031,15 @@ async function handleLoginSubmit(e) {
 // Manejar envío del formulario de registro
 async function handleRegisterSubmit(e) {
     e.preventDefault();
-    console.log('Register form submitted'); // Debug log
     
     const formData = {
         firstName: document.getElementById('firstName').value.trim(),
         lastName: document.getElementById('lastName').value.trim(),
         birthDate: document.getElementById('birthDate').value,
-        city: document.getElementById('city').value.trim(),
+        city: document.getElementById('city').value.trim() || document.getElementById('citySelect').value,
         email: document.getElementById('registerEmail').value.trim(),
-        password: document.getElementById('registerPassword').value
+        password: document.getElementById('registerPassword').value,
+        confirmPassword: document.getElementById('confirmPassword').value
     };
     
     const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -1068,6 +1093,15 @@ async function handleRegisterSubmit(e) {
         hasErrors = true;
     }
 
+    // Validar confirmación de contraseña
+    if (!formData.confirmPassword) {
+        showRegisterError('registerPassword', 'Debes confirmar tu contraseña');
+        hasErrors = true;
+    } else if (formData.password !== formData.confirmPassword) {
+        showRegisterError('registerPassword', 'Las contraseñas no coinciden');
+        hasErrors = true;
+    }
+
     if (hasErrors) return;
 
     // Deshabilitar botón y mostrar loading
@@ -1087,7 +1121,7 @@ async function handleRegisterSubmit(e) {
             showRegisterError('registerEmail', response.message);
         }
     } catch (error) {
-        alert('Error en el registro. Intenta de nuevo.');
+        alert('Error en el registro. Please try again.');
     } finally {
         submitBtn.disabled = false;
         submitBtn.textContent = 'Register';

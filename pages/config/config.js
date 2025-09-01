@@ -1,58 +1,57 @@
-// ===== VERIFICACIÓN DE AUTENTICACIÓN =====
+// ===== AUTHENTICATION VERIFICATION =====
 
-// Verificar autenticación al cargar la página
+// Verify authentication when loading the page
 document.addEventListener('DOMContentLoaded', function() {
-    // Cargar sesión desde localStorage
-    const hasSession = window.RoomZAuth?.loadSession?.() || loadSession();
+    // Load session from localStorage
+    const hasSession = window.RoomZAuth?.loadSession?.() || (getUserIdFromStorage() !== null);
     
     if (!hasSession || !window.RoomZAuth?.isAuthenticated?.()) {
-        alert('Debes iniciar sesión para acceder a la configuración');
+        alert('You must log in to access settings');
         window.location.href = '../../index.html';
         return;
     }
     
-    // Verificar parámetros de URL para seguridad adicional
+    // Verify URL parameters for additional security
     const urlParams = new URLSearchParams(window.location.search);
     const requestedUserId = urlParams.get('userId');
-    const currentUserId = window.RoomZAuth?.getCurrentUserId?.() || getCurrentUserId();
+    const currentUserId = window.RoomZAuth?.getCurrentUserId?.() || getUserIdFromStorage();
     
     if (requestedUserId && parseInt(requestedUserId) !== currentUserId) {
-        alert('No tienes permiso para acceder a esta configuración');
+        alert('You do not have permission to access this configuration');
         window.location.href = '../../index.html';
         return;
     }
     
-    // Si llegamos aquí, el usuario está autenticado correctamente
+    // If we reach here, the user is properly authenticated
     initializeConfig();
 });
 
-// Configuración de la API
+// API Configuration
 const API_BASE_URL = 'http://localhost:3010/api/V1';
 
-// Estado global de la aplicación
-let currentUser = null;
+// Global state specific to the configuration page
 let currentContacts = null;
 let userRoomz = [];
-let currentUserId = null;
+let configUserId = null;
 
-// Estados de edición
+// Edit states
 let isEditingProfile = false;
 let isEditingContacts = false;
 let editingRoomzId = null;
 let isAddingRoomz = false;
 
-// Elementos del DOM
+// DOM Elements
 const loadingEl = document.getElementById('loading');
 const errorEl = document.getElementById('error');
 const contentEl = document.getElementById('content');
 const errorMessageEl = document.getElementById('errorMessage');
 const retryBtn = document.getElementById('retryBtn');
 
-// Elementos de navegación
+// Navigation elements
 const sidebarItems = document.querySelectorAll('.sidebar-item');
 const sections = document.querySelectorAll('.section');
 
-// Elementos del perfil
+// Profile elements
 const editProfileBtn = document.getElementById('editProfileBtn');
 const cancelEditBtn = document.getElementById('cancelEditBtn');
 const saveProfileBtn = document.getElementById('saveProfileBtn');
@@ -73,7 +72,7 @@ const birthDateInput = document.getElementById('birthDateInput');
 const roleDisplay = document.getElementById('roleDisplay');
 const roleInput = document.getElementById('roleInput');
 
-// Elementos de contactos
+// Contact elements
 const editContactsBtn = document.getElementById('editContactsBtn');
 const cancelContactsBtn = document.getElementById('cancelContactsBtn');
 const saveContactsBtn = document.getElementById('saveContactsBtn');
@@ -94,7 +93,7 @@ const linkedinInput = document.getElementById('linkedinInput');
 const tiktokDisplay = document.getElementById('tiktokDisplay');
 const tiktokInput = document.getElementById('tiktokInput');
 
-// Elementos de RoomZ
+// RoomZ elements
 const addRoomzBtn = document.getElementById('addRoomzBtn');
 const roomzGridEl = document.getElementById('roomzGrid');
 const roomzModal = document.getElementById('roomzModal');
@@ -114,13 +113,13 @@ const roomzPriceInput = document.getElementById('roomzPrice');
 const roomzTypeInput = document.getElementById('roomzType');
 const roomzAvailableInput = document.getElementById('roomzAvailable');
 
-// Función de inicialización de configuración
+// Configuration initialization function
 function initializeConfig() {
-    // Obtener ID del usuario autenticado
-    currentUserId = window.RoomZAuth?.getCurrentUserId?.() || getCurrentUserId();
+    // Get ID of the authenticated user
+    configUserId = window.RoomZAuth?.getCurrentUserId?.() || getUserIdFromStorage();
     
-    if (!currentUserId) {
-        showError('No se encontró el ID del usuario. Por favor, inicia sesión.');
+    if (!configUserId) {
+        showError('User ID not found. Please log in.');
         return;
     }
     
@@ -128,109 +127,56 @@ function initializeConfig() {
     setupEventListeners();
 }
 
-// Función de debug para verificar elementos del DOM
-function debugDOMElements() {
-    console.log('🔍 === DEBUG: ELEMENTOS DEL DOM ===');
-    
-    const elements = {
-        'roomzGridEl': roomzGridEl,
-        'addRoomzBtn': addRoomzBtn,
-        'roomzModal': roomzModal,
-        'editProfileBtn': editProfileBtn,
-        'editContactsBtn': editContactsBtn
-    };
-    
-    Object.entries(elements).forEach(([name, element]) => {
-        if (element) {
-            console.log(`✅ ${name}:`, element);
-        } else {
-            console.error(`❌ ${name}: NO ENCONTRADO`);
-        }
-    });
-    
-    console.log('🔍 === FIN DEBUG DOM ===');
-}
-
-// Función principal de inicialización
+// Main initialization function
 async function init() {
     try {
-        console.log('🚀 Iniciando aplicación...');
-        console.log('👤 ID del usuario:', currentUserId);
-        
         showLoading();
         
-        // Debug: verificar elementos del DOM
-        debugDOMElements();
-        
-        // Cargar datos del usuario y contactos en paralelo
-        console.log('📡 Cargando datos del usuario...');
+        // Load user data and contacts in parallel
         const [userResult, contactsResult, roomzResult] = await Promise.all([
-            loadUserData(currentUserId),
-            loadUserContacts(currentUserId),
-            loadUserRoomz(currentUserId)
+            loadUserData(configUserId),
+            loadUserContacts(configUserId),
+            loadUserRoomz(configUserId)
         ]);
         
-        console.log('📊 Datos cargados:', {
-            user: userResult,
-            contacts: contactsResult,
-            roomz: roomzResult
-        });
+        // Update the currentUser of the auth.js with the loaded data
+        if (window.RoomZAuth && window.RoomZAuth.currentUser) {
+            window.RoomZAuth.currentUser = userResult;
+        }
         
-        console.log('🔍 Detalles de roomzResult:', {
-            tipo: typeof roomzResult,
-            esArray: Array.isArray(roomzResult),
-            longitud: roomzResult ? roomzResult.length : 'undefined',
-            contenido: roomzResult
-        });
-        
-        currentUser = userResult;
         currentContacts = contactsResult;
         userRoomz = roomzResult;
         
-        console.log('💾 Variables globales actualizadas:', {
-            currentUser: currentUser ? 'cargado' : 'no cargado',
-            currentContacts: currentContacts ? 'cargado' : 'no cargado',
-            userRoomz: userRoomz ? `cargado (${userRoomz.length})` : 'no cargado'
-        });
-        
-        // Ocultar loading y mostrar contenido
+        // Hide loading and show content
         hideLoading();
         showContent();
         
-        // Renderizar los datos
-        console.log('🎨 Renderizando datos...');
+        // Render the data
         renderUserProfile();
         renderUserContacts();
         renderUserRoomz();
         
-        console.log('✅ Aplicación inicializada correctamente');
-        console.log('🔍 Estado final:', {
-            userRoomz: userRoomz,
-            roomzGridEl: roomzGridEl,
-            roomzGridElExists: !!roomzGridEl,
-            roomzGridElChildren: roomzGridEl ? roomzGridEl.children.length : 'N/A'
-        });
-        
     } catch (error) {
-        console.error('💥 Error al inicializar la aplicación:', error);
-        showError(`Error al cargar la configuración: ${error.message}`);
+        console.error('💥 Error initializing application:', error);
+        showError(`Error loading configuration: ${error.message}`);
     }
 }
 
-// Obtener ID del usuario de la URL
+// Get ID of the user from the URL
 function getUserIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
     return urlParams.get('userId') || urlParams.get('id');
 }
 
-// Obtener ID del usuario del localStorage
+// Get ID of the user from the localStorage
 function getUserIdFromStorage() {
-    return localStorage.getItem('userId');
+    const userId = localStorage.getItem('roomieZ_userId');
+    return userId ? parseInt(userId) : null;
 }
 
-// ==================== FUNCIONES DE LA API ====================
+// ==================== API FUNCTIONS ====================
 
-// Cargar datos del usuario
+// Load user data
 async function loadUserData(userId) {
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}`);
@@ -240,26 +186,24 @@ async function loadUserData(userId) {
         }
         
         const data = await response.json();
-        console.log('👤 Usuario cargado:', data);
         
         if (data && data.data && data.data.id) {
             return data.data;
         } else {
-            throw new Error('La API no devolvió datos válidos del usuario');
+            throw new Error('API did not return valid user data');
         }
     } catch (error) {
-        console.error('Error al cargar datos del usuario:', error);
-        throw new Error(`Error al cargar datos del usuario: ${error.message}`);
+        console.error('Error loading user data:', error);
+        throw new Error(`Error loading user data: ${error.message}`);
     }
 }
 
-// Cargar contactos del usuario
+// Load user contacts
 async function loadUserContacts(userId) {
     try {
         const response = await fetch(`${API_BASE_URL}/users/${userId}/contacts`);
         
         if (response.status === 404) {
-            console.log('📞 No hay contactos disponibles para este usuario');
             return null;
         }
         
@@ -268,7 +212,6 @@ async function loadUserContacts(userId) {
         }
         
         const data = await response.json();
-        console.log('📞 Contactos cargados:', data);
         
         if (data && data.data && data.data.id) {
             return data.data;
@@ -284,18 +227,10 @@ async function loadUserContacts(userId) {
 // Cargar RoomZ del usuario
 async function loadUserRoomz(userId) {
     try {
-        console.log(`🏠 Cargando RoomZ para usuario: ${userId}`);
         const response = await fetch(`${API_BASE_URL}/roomz/user/${userId}`);
         
-        console.log('📡 Respuesta de la API:', {
-            status: response.status,
-            statusText: response.statusText,
-            ok: response.ok,
-            headers: Object.fromEntries(response.headers.entries())
-        });
         
         if (response.status === 404) {
-            console.log('🏠 No hay RoomZ disponibles para este usuario (404)');
             return [];
         }
         
@@ -304,36 +239,21 @@ async function loadUserRoomz(userId) {
         }
         
         const data = await response.json();
-        console.log('🏠 Respuesta completa de RoomZ:', data);
-        console.log('🔍 Estructura de la respuesta:', {
-            tieneData: !!data,
-            tipoData: typeof data,
-            tieneRoomz: !!(data && data.roomz),
-            tipoRoomz: data && data.roomz ? typeof data.roomz : 'N/A',
-            esArray: data && data.roomz ? Array.isArray(data.roomz) : 'N/A',
-            longitud: data && data.roomz && Array.isArray(data.roomz) ? data.roomz.length : 'N/A'
-        });
         
-        // Verificar que la respuesta tenga la estructura correcta
+        // Verify that the response has the correct structure.
         if (data && data.roomz && Array.isArray(data.roomz)) {
-            console.log(`✅ ${data.roomz.length} RoomZ cargados exitosamente`);
             return data.roomz;
         } else {
-            console.error('❌ Estructura de respuesta de RoomZ inválida:', data);
-            console.log('🔍 Intentando buscar roomz en diferentes ubicaciones...');
+            console.error('❌ Invalid RoomZ response structure:', data);
             
-            // Intentar diferentes estructuras posibles
+            // Try different possible structures.
             if (data && Array.isArray(data)) {
-                console.log('✅ Encontrado array directo en data');
                 return data;
             } else if (data && data.data && Array.isArray(data.data)) {
-                console.log('✅ Encontrado array en data.data');
                 return data.data;
             } else if (data && data.results && Array.isArray(data.results)) {
-                console.log('✅ Encontrado array en data.results');
                 return data.results;
             } else {
-                console.log('❌ No se encontró estructura válida, retornando array vacío');
                 return [];
             }
         }
@@ -359,7 +279,6 @@ async function updateUserData(userId, userData) {
         }
         
         const data = await response.json();
-        console.log('✅ Usuario actualizado:', data);
         return data;
     } catch (error) {
         console.error('Error al actualizar usuario:', error);
@@ -383,7 +302,6 @@ async function updateUserContacts(userId, contactsData) {
         }
         
         const data = await response.json();
-        console.log('✅ Contactos actualizados:', data);
         return data;
     } catch (error) {
         console.error('Error al actualizar contactos:', error);
@@ -407,7 +325,6 @@ async function createRoomz(roomzData) {
         }
         
         const data = await response.json();
-        console.log('✅ RoomZ creado:', data);
         return data;
     } catch (error) {
         console.error('Error al crear RoomZ:', error);
@@ -431,7 +348,6 @@ async function updateRoomz(roomzId, roomzData) {
         }
         
         const data = await response.json();
-        console.log('✅ RoomZ actualizado:', data);
         return data;
     } catch (error) {
         console.error('Error al actualizar RoomZ:', error);
@@ -451,7 +367,6 @@ async function deleteRoomz(roomzId) {
         }
         
         const data = await response.json();
-        console.log('✅ RoomZ eliminado:', data);
         return data;
     } catch (error) {
         console.error('Error al eliminar RoomZ:', error);
@@ -463,6 +378,7 @@ async function deleteRoomz(roomzId) {
 
 // Renderizar perfil del usuario
 function renderUserProfile() {
+    const currentUser = window.RoomZAuth?.currentUser;
     if (!currentUser) return;
     
     // Username
@@ -512,7 +428,7 @@ function renderUserContacts() {
         return;
     }
     
-    // Teléfono
+    // Phone
     phoneDisplay.textContent = currentContacts.phone_number || 'Sin especificar';
     phoneInput.value = currentContacts.phone_number || '';
     
@@ -543,32 +459,21 @@ function renderUserContacts() {
 
 // Renderizar RoomZ del usuario
 function renderUserRoomz() {
-    console.log('🎨 Iniciando renderizado de RoomZ...');
-    console.log('📊 RoomZ a renderizar:', userRoomz);
-    console.log('🔍 Tipo de userRoomz:', typeof userRoomz);
-    console.log('🔍 Es array:', Array.isArray(userRoomz));
-    console.log('🔍 Longitud:', userRoomz ? userRoomz.length : 'undefined');
-    
     if (!roomzGridEl) {
         console.error('❌ Elemento roomzGrid no encontrado en el DOM');
         return;
     }
     
-    // Verificar que la sección esté visible
+    // Verify that the section is visible
     const roomzSection = document.getElementById('roomz-section');
     if (roomzSection && roomzSection.classList.contains('hidden')) {
-        console.log('⚠️ Sección de RoomZ está oculta, no se puede renderizar');
         return;
     }
-    
-    console.log('✅ Elemento roomzGrid encontrado y sección visible');
-    console.log('🔍 Contenido actual del grid:', roomzGridEl.innerHTML);
     
     // Limpiar grid
     roomzGridEl.innerHTML = '';
     
     if (!userRoomz || userRoomz.length === 0) {
-        console.log('📝 No hay RoomZ para mostrar, mostrando mensaje');
         roomzGridEl.innerHTML = `
             <div class="no-roomz">
                 <p>No tienes RoomZ publicados aún.</p>
@@ -578,51 +483,27 @@ function renderUserRoomz() {
         return;
     }
     
-    console.log(`🎯 Renderizando ${userRoomz.length} RoomZ...`);
-    
     userRoomz.forEach((roomz, index) => {
-        console.log(`🏠 Creando tarjeta para RoomZ ${index + 1}:`, roomz);
         const roomzCard = createRoomzCard(roomz);
         roomzGridEl.appendChild(roomzCard);
-        console.log(`✅ Tarjeta ${index + 1} agregada al grid`);
     });
-    
-    console.log('✅ Renderizado de RoomZ completado');
-    console.log('🔍 Elementos en el grid:', roomzGridEl.children.length);
-    console.log('🔍 Contenido final del grid:', roomzGridEl.innerHTML);
 }
 
 // Crear tarjeta de RoomZ
 function createRoomzCard(roomz) {
-    console.log('🃏 Creando tarjeta para RoomZ:', roomz);
-    console.log('🔍 ID del roomz:', roomz.id);
-    console.log('🔍 Tipo de roomz:', typeof roomz);
-    
     const card = document.createElement('div');
     card.className = 'roomz-card';
     
     // Validar y formatear datos
-    const title = roomz.title || 'Sin título';
-    const subtitle = roomz.subtitle || 'Sin subtítulo';
-    const details = roomz.details || 'Sin detalles';
-    const description = roomz.description || 'Sin descripción';
-    const address = roomz.address || 'Sin dirección';
+    const title = roomz.title || 'No title';
+    const subtitle = roomz.subtitle || 'No subtitle';
+    const details = roomz.details || 'No details';
+    const description = roomz.description || 'No description';
+    const address = roomz.address || 'No address';
     const price = roomz.price ? parseFloat(roomz.price).toLocaleString('es-CO') : '0';
     const typeText = getRoomzTypeText(roomz.roomz_type);
     const availableText = roomz.is_available ? 'Disponible' : 'No disponible';
     const availableClass = roomz.is_available ? 'available' : 'not-available';
-    
-    console.log('📝 Datos formateados:', {
-        title,
-        subtitle,
-        details,
-        description,
-        address,
-        price,
-        typeText,
-        availableText,
-        availableClass
-    });
     
     card.innerHTML = `
         <div class="roomz-header">
@@ -655,15 +536,12 @@ function createRoomzCard(roomz) {
         </div>
     `;
     
-    console.log('✅ Tarjeta creada exitosamente');
-    console.log('🔍 Elemento DOM creado:', card);
-    console.log('🔍 HTML de la tarjeta:', card.outerHTML);
     return card;
 }
 
-// ==================== FUNCIONES DE EDICIÓN ====================
+// ==================== EDIT FUNCTIONS ====================
 
-// Alternar edición del perfil
+// Toggle profile editing
 function toggleProfileEdit() {
     isEditingProfile = !isEditingProfile;
     
@@ -680,10 +558,10 @@ function toggleProfileEdit() {
         roleDisplay.classList.add('hidden');
         roleInput.classList.remove('hidden');
         
-        // Mostrar acciones de edición
+        // Show edit actions
         editActionsEl.classList.remove('hidden');
         
-        // Cambiar texto del botón
+        // Change button text
         editProfileBtn.innerHTML = `
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -704,10 +582,10 @@ function toggleProfileEdit() {
         roleDisplay.classList.remove('hidden');
         roleInput.classList.add('hidden');
         
-        // Ocultar acciones de edición
+        // Hide edit actions
         editActionsEl.classList.add('hidden');
         
-        // Resetear texto del botón
+        // Reset button text
         editProfileBtn.innerHTML = `
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -718,7 +596,7 @@ function toggleProfileEdit() {
     }
 }
 
-// Alternar edición de contactos
+// Toggle contact editing
 function toggleContactsEdit() {
     isEditingContacts = !isEditingContacts;
     
@@ -739,10 +617,10 @@ function toggleContactsEdit() {
         tiktokDisplay.classList.add('hidden');
         tiktokInput.classList.remove('hidden');
         
-        // Mostrar acciones de edición
+        // Show edit actions
         editContactsActionsEl.classList.remove('hidden');
         
-        // Cambiar texto del botón
+        // Change button text
         editContactsBtn.innerHTML = `
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -767,10 +645,10 @@ function toggleContactsEdit() {
         tiktokDisplay.classList.remove('hidden');
         tiktokInput.classList.add('hidden');
         
-        // Ocultar acciones de edición
+        // Hide edit actions
         editContactsActionsEl.classList.add('hidden');
         
-        // Resetear texto del botón
+        // Reset button text
         editContactsBtn.innerHTML = `
             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -802,15 +680,17 @@ async function saveProfile() {
         }
         
         // Guardar en la API
-        await updateUserData(currentUserId, updatedData);
+        await updateUserData(configUserId, updatedData);
         
         // Actualizar datos locales
-        currentUser = { ...currentUser, ...updatedData };
+        if (window.RoomZAuth && window.RoomZAuth.currentUser) {
+            window.RoomZAuth.currentUser = { ...window.RoomZAuth.currentUser, ...updatedData };
+        }
         
         // Re-renderizar perfil
         renderUserProfile();
         
-        // Salir del modo edición
+        // Exit edit mode
         toggleProfileEdit();
         
         alert('Perfil actualizado exitosamente!');
@@ -835,15 +715,15 @@ async function saveContacts() {
             tiktok_url: tiktokInput.value || null
         };
         
-        // Validar que al menos un método de contacto esté proporcionado
+        // Validate that at least one contact method is provided
         const hasContact = Object.values(updatedContacts).some(value => value !== null && value !== '');
         if (!hasContact) {
-            alert('Debes proporcionar al menos un método de contacto.');
+            alert('You must provide at least one contact method.');
             return;
         }
         
         // Guardar en la API
-        await updateUserContacts(currentUserId, updatedContacts);
+        await updateUserContacts(configUserId, updatedContacts);
         
         // Actualizar datos locales
         currentContacts = { ...currentContacts, ...updatedContacts };
@@ -851,7 +731,7 @@ async function saveContacts() {
         // Re-renderizar contactos
         renderUserContacts();
         
-        // Salir del modo edición
+        // Exit edit mode
         toggleContactsEdit();
         
         alert('Contactos actualizados exitosamente!');
@@ -880,7 +760,7 @@ function showRoomzModal(roomz = null) {
         editingRoomzId = roomz.id;
         isAddingRoomz = false;
         
-        // Mostrar botón de eliminar
+        // Show delete button
         deleteRoomzBtn.classList.remove('hidden');
     } else {
         // Agregando nuevo RoomZ
@@ -896,7 +776,7 @@ function showRoomzModal(roomz = null) {
         editingRoomzId = null;
         isAddingRoomz = true;
         
-        // Ocultar botón de eliminar
+        // Hide delete button
         deleteRoomzBtn.classList.add('hidden');
     }
     
@@ -923,7 +803,7 @@ async function saveRoomz() {
     try {
         // Obtener datos del formulario
         const roomzData = {
-            user_id: parseInt(currentUserId),
+            user_id: parseInt(configUserId),
             title: roomzTitleInput.value,
             subtitle: roomzSubtitleInput.value,
             details: roomzDetailsInput.value,
@@ -961,7 +841,7 @@ async function saveRoomz() {
             
             // Agregar a la lista local
             const newRoomz = {
-                id: result.roomId,
+                id: result.id,
                 ...roomzData
             };
             userRoomz.push(newRoomz);
@@ -983,7 +863,7 @@ async function saveRoomz() {
 
 // Eliminar RoomZ por ID
 async function deleteRoomzById(roomzId) {
-    if (!confirm('¿Estás seguro de que quieres eliminar este RoomZ? Esta acción no se puede deshacer.')) {
+            if (!confirm('Are you sure you want to delete this RoomZ? This action cannot be undone.')) {
         return;
     }
     
@@ -1006,35 +886,23 @@ async function deleteRoomzById(roomzId) {
 
 // ==================== FUNCIONES DE NAVEGACIÓN ====================
 
-// Cambiar sección activa
+// Change active section
 function changeSection(sectionName) {
-    console.log('🔄 Cambiando a sección:', sectionName);
     
     // Ocultar todas las secciones
     sections.forEach(section => {
         section.classList.add('hidden');
-        console.log(`📁 Ocultando sección: ${section.id}`);
     });
     
-    // Mostrar sección seleccionada
+            // Show selected section
     const targetSection = document.getElementById(`${sectionName}-section`);
     if (targetSection) {
         targetSection.classList.remove('hidden');
-        console.log(`✅ Mostrando sección: ${targetSection.id}`);
         
-        // Si es la sección de roomz, re-renderizar
+        // If it's the roomz section, re-render
         if (sectionName === 'roomz') {
-            console.log('🏠 Sección de RoomZ activada, re-renderizando...');
-            console.log('🔍 Estado actual de userRoomz:', {
-                existe: !!userRoomz,
-                esArray: Array.isArray(userRoomz),
-                longitud: userRoomz ? userRoomz.length : 'undefined'
-            });
-            
             if (userRoomz && Array.isArray(userRoomz)) {
                 renderUserRoomz();
-            } else {
-                console.log('⚠️ No hay datos de roomz para renderizar');
             }
         }
     } else {
@@ -1049,7 +917,6 @@ function changeSection(sectionName) {
     const activeItem = document.querySelector(`[data-section="${sectionName}"]`);
     if (activeItem) {
         activeItem.classList.add('active');
-        console.log(`✅ Sidebar actualizado para: ${sectionName}`);
     }
 }
 
@@ -1096,14 +963,13 @@ function getRoomzTypeText(type) {
     return types[type] || 'Alojamiento';
 }
 
-// ==================== CONFIGURACIÓN DE EVENT LISTENERS ====================
+// ==================== EVENT LISTENERS CONFIGURATION ====================
 
 function setupEventListeners() {
-    // Navegación del sidebar
+    // Sidebar navigation
     sidebarItems.forEach(item => {
         item.addEventListener('click', function() {
             const section = this.getAttribute('data-section');
-            console.log('🖱️ Click en sidebar item:', section);
             changeSection(section);
         });
     });
@@ -1130,7 +996,7 @@ function setupEventListeners() {
         }
     });
     
-    // Botón de reintento
+    // Retry button
     retryBtn.addEventListener('click', init);
     
     // Cerrar modal al hacer clic fuera
@@ -1146,4 +1012,28 @@ function setupEventListeners() {
             hideRoomzModal();
         }
     });
+}
+
+// ==================== FUNCIONES DE NAVEGACIÓN ====================
+
+// Ir al index
+function goToIndex() {
+    window.location.href = '../../index.html';
+}
+
+// Logout
+function logout() {
+            if (confirm('Are you sure you want to log out?')) {
+        // Clear session using auth.js if available
+        if (window.RoomZAuth && window.RoomZAuth.clearSession) {
+            window.RoomZAuth.clearSession();
+        } else {
+            // Fallback: limpiar localStorage directamente
+            localStorage.removeItem('roomieZ_userId');
+            localStorage.removeItem('roomieZ_isAuthenticated');
+        }
+        
+        // Redirigir al index
+        window.location.href = '../../index.html';
+    }
 }

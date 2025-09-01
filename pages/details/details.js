@@ -43,65 +43,6 @@ document.addEventListener('DOMContentLoaded', function() {
     initializePage();
 });
 
-// Función de debug para mostrar toda la información cargada
-function debugLoadedData() {
-    console.log('🔍 === DEBUG: INFORMACIÓN CARGADA ===');
-    
-    if (currentRoomz) {
-        console.log('🏠 Roomz:', {
-            id: currentRoomz.id,
-            title: currentRoomz.title,
-            subtitle: currentRoomz.subtitle,
-            details: currentRoomz.details,
-            description: currentRoomz.description,
-            address: currentRoomz.address,
-            price: currentRoomz.price,
-            roomz_type: currentRoomz.roomz_type,
-            is_available: currentRoomz.is_available,
-            published_at: currentRoomz.published_at,
-            user_id: currentRoomz.user_id
-        });
-    } else {
-        console.log('❌ No hay datos del Roomz cargados');
-    }
-    
-    if (currentHost) {
-        console.log('👤 Anfitrión:', {
-            id: currentHost.id,
-            first_name: currentHost.first_name,
-            middle_name: currentHost.middle_name,
-            last_name: currentHost.last_name,
-            username: currentHost.username,
-            email: currentHost.email,
-            city: currentHost.city,
-            role: currentHost.role,
-            birthdate: currentHost.birthdate,
-            created_at: currentHost.created_at
-        });
-    } else {
-        console.log('❌ No hay datos del anfitrión cargados');
-    }
-    
-    if (currentContacts) {
-        console.log('📞 Contactos:', {
-            id: currentContacts.id,
-            user_id: currentContacts.user_id,
-            phone_number: currentContacts.phone_number,
-            whatsapp_number: currentContacts.whatsapp_number,
-            instagram_url: currentContacts.instagram_url,
-            facebook_url: currentContacts.facebook_url,
-            twitter_url: currentContacts.twitter_url,
-            linkedin_url: currentContacts.linkedin_url,
-            tiktok_url: currentContacts.tiktok_url,
-            created_at: currentContacts.created_at,
-            updated_at: currentContacts.updated_at
-        });
-    } else {
-        console.log('❌ No hay contactos cargados');
-    }
-    
-    console.log('🔍 === FIN DEBUG ===');
-}
 
 // Función principal de inicialización
 async function initializePage() {
@@ -113,8 +54,6 @@ async function initializePage() {
         if (!roomzId) {
             throw new Error('No se encontró el ID del Roomz en la URL');
         }
-
-        console.log('🚀 Iniciando página con Roomz ID:', roomzId);
         
         // Cargar datos del Roomz
         await loadRoomzData(roomzId);
@@ -132,9 +71,6 @@ async function initializePage() {
         // Configurar fechas por defecto
         setupDefaultDates();
         
-        // Debug: mostrar toda la información cargada
-        debugLoadedData();
-        
         // Mostrar contenido principal
         showMainContent();
         
@@ -147,15 +83,14 @@ async function initializePage() {
 // Obtener ID del Roomz de la URL
 function getRoomzIdFromUrl() {
     const urlParams = new URLSearchParams(window.location.search);
-    // Soporte para ambos parámetros: 'id' (legacy) y 'roomId' (nuevo)
-    return urlParams.get('roomId') || urlParams.get('id');
+    // Soporte para ambos parámetros: 'id' (legacy) y 'id' (nuevo)
+    return urlParams.get('id') || urlParams.get('id');
 }
 
 // Cargar datos del Roomz
 async function loadRoomzData(roomzId) {
     try {
         const url = `${API_BASE_URL}/roomz/${roomzId}`;
-        console.log('🔍 Intentando cargar Roomz desde:', url);
         
         const response = await fetch(url, {
             method: "GET",
@@ -169,13 +104,10 @@ async function loadRoomzData(roomzId) {
         }
         
         const data = await response.json();
-        console.log('✅ Respuesta completa de la API:', data);
         
         // Verificar que la respuesta tenga la estructura correcta
         if (data && data.room && data.room.id) {
             currentRoomz = data.room;
-            console.log('🏠 Roomz cargado exitosamente:', currentRoomz);
-            console.log('📝 Mensaje de la API:', data.message);
             updateRoomzUI();
         } else {
             console.error('❌ Estructura de respuesta inválida:', data);
@@ -191,7 +123,6 @@ async function loadRoomzData(roomzId) {
 async function loadHostData(userId) {
     try {
         const url = `${API_BASE_URL}/users/${userId}`;
-        console.log('👤 Intentando cargar datos del anfitrión desde:', url);
         
         const response = await fetch(url);
         
@@ -200,13 +131,10 @@ async function loadHostData(userId) {
         }
         
         const data = await response.json();
-        console.log('👤 Respuesta completa del anfitrión:', data);
         
         // Verificar que la respuesta tenga la estructura correcta
         if (data && data.data && data.data.id) {
             currentHost = data.data;
-            console.log('✅ Anfitrión cargado exitosamente:', currentHost);
-            console.log('📝 Mensaje de la API:', data.message);
             updateHostUI();
         } else {
             console.error('❌ Estructura de respuesta del anfitrión inválida:', data);
@@ -222,13 +150,10 @@ async function loadHostData(userId) {
 async function loadHostContacts(userId) {
     try {
         const url = `${API_BASE_URL}/users/${userId}/contacts`;
-        console.log('📞 Intentando cargar contactos del anfitrión desde:', url);
         
         const response = await fetch(url);
         
         if (response.status === 404) {
-            // No hay contactos, mostrar mensaje
-            console.log('📞 No hay contactos disponibles para este usuario (404)');
             currentContacts = null;
             updateContactsUI();
             return;
@@ -239,13 +164,10 @@ async function loadHostContacts(userId) {
         }
         
         const data = await response.json();
-        console.log('📞 Respuesta completa de contactos:', data);
         
         // Verificar que la respuesta tenga la estructura correcta
         if (data && data.data && data.data.id) {
             currentContacts = data.data;
-            console.log('✅ Contactos cargados exitosamente:', currentContacts);
-            console.log('📝 Mensaje de la API:', data.message);
             updateContactsUI();
         } else {
             console.error('❌ Estructura de respuesta de contactos inválida:', data);
@@ -265,7 +187,6 @@ async function loadHostContacts(userId) {
 function updateRoomzUI() {
     if (!currentRoomz) return;
     
-    console.log('🎨 Actualizando UI del Roomz:', currentRoomz);
     
     // Título
     if (roomzTitleElement) {
@@ -300,15 +221,11 @@ function updateRoomzUI() {
         roomzPriceElement.textContent = `${formattedPrice} COP`;
     }
     
-    // Mostrar estado de disponibilidad si está disponible
-    if (currentRoomz.is_available !== undefined) {
-        console.log('📊 Estado de disponibilidad:', currentRoomz.is_available);
-    }
+
     
     // Mostrar fecha de publicación si está disponible
     if (currentRoomz.published_at) {
         const publishedDate = new Date(currentRoomz.published_at);
-        console.log('📅 Fecha de publicación:', publishedDate.toLocaleDateString('es-CO'));
     }
     
     // Actualizar desglose de precios
@@ -318,8 +235,6 @@ function updateRoomzUI() {
 // Actualizar interfaz del anfitrión
 function updateHostUI() {
     if (!currentHost) return;
-    
-    console.log('👤 Actualizando UI del anfitrión:', currentHost);
     
     // Nombre del anfitrión
     if (hostNameElement) {
@@ -350,32 +265,17 @@ function updateHostUI() {
         }
     }
     
-    // Mostrar información adicional del anfitrión en consola
-    if (currentHost.email) {
-        console.log('📧 Email del anfitrión:', currentHost.email);
-    }
-    if (currentHost.username) {
-        console.log('👤 Username del anfitrión:', currentHost.username);
-    }
-    if (currentHost.city) {
-        console.log('🏙️ Ciudad del anfitrión:', currentHost.city);
-    }
-    if (currentHost.role) {
-        console.log('🎭 Rol del anfitrión:', currentHost.role);
-    }
+    
     if (currentHost.birthdate) {
         const birthDate = new Date(currentHost.birthdate);
         const age = new Date().getFullYear() - birthDate.getFullYear();
-        console.log('🎂 Fecha de nacimiento del anfitrión:', birthDate.toLocaleDateString('es-CO'));
-        console.log('📊 Edad del anfitrión:', age, 'años');
     }
 }
 
 // Actualizar interfaz de contactos
 function updateContactsUI() {
     if (!contactLinksElement) return;
-    
-    console.log('📞 Actualizando UI de contactos:', currentContacts);
+
     
     if (!currentContacts) {
         contactLinksElement.innerHTML = '<p class="no-contacts">No hay información de contacto disponible</p>';
@@ -389,7 +289,6 @@ function updateContactsUI() {
         const cleanNumber = currentContacts.phone_number.replace(/\D/g, '');
         const phoneUrl = `tel:${cleanNumber}`;
         contactLinks.push(createContactLink('phone', 'Teléfono', currentContacts.phone_number, phoneUrl));
-        console.log('📞 Teléfono disponible:', currentContacts.phone_number);
     }
     
     // WhatsApp
@@ -397,45 +296,37 @@ function updateContactsUI() {
         const cleanNumber = currentContacts.whatsapp_number.replace(/\D/g, '');
         const whatsappUrl = `https://wa.me/${cleanNumber}`;
         contactLinks.push(createContactLink('whatsapp', 'WhatsApp', currentContacts.whatsapp_number, whatsappUrl));
-        console.log('📱 WhatsApp disponible:', currentContacts.whatsapp_number);
     }
     
     // Instagram
     if (currentContacts.instagram_url) {
         contactLinks.push(createContactLink('instagram', 'Instagram', 'Ver perfil', currentContacts.instagram_url));
-        console.log('📸 Instagram disponible:', currentContacts.instagram_url);
     }
     
     // Facebook
     if (currentContacts.facebook_url) {
         contactLinks.push(createContactLink('facebook', 'Facebook', 'Ver perfil', currentContacts.facebook_url));
-        console.log('👥 Facebook disponible:', currentContacts.facebook_url);
     }
     
     // Twitter
     if (currentContacts.twitter_url) {
         contactLinks.push(createContactLink('twitter', 'Twitter', 'Ver perfil', currentContacts.twitter_url));
-        console.log('🐦 Twitter disponible:', currentContacts.twitter_url);
     }
     
     // LinkedIn
     if (currentContacts.linkedin_url) {
         contactLinks.push(createContactLink('linkedin', 'LinkedIn', 'Ver perfil', currentContacts.linkedin_url));
-        console.log('💼 LinkedIn disponible:', currentContacts.linkedin_url);
     }
     
     // TikTok
     if (currentContacts.tiktok_url) {
         contactLinks.push(createContactLink('tiktok', 'TikTok', 'Ver perfil', currentContacts.tiktok_url));
-        console.log('🎵 TikTok disponible:', currentContacts.tiktok_url);
     }
     
     if (contactLinks.length === 0) {
         contactLinksElement.innerHTML = '<p class="no-contacts">No hay redes sociales disponibles</p>';
-        console.log('❌ No se encontraron contactos válidos');
     } else {
         contactLinksElement.innerHTML = contactLinks.join('');
-        console.log(`✅ ${contactLinks.length} contacto(s) mostrado(s)`);
     }
 }
 

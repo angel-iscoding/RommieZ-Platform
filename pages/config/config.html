@@ -1,36 +1,58 @@
 <!DOCTYPE html>
-<html lang="es">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Configuración de Usuario - RoomieZ</title>
+    <title>User Settings - RoomieZ</title>
     <link rel="stylesheet" href="config.css">
 </head>
 <body>
+    <!-- Header -->
+    <div class="header">
+        <div class="header-content">
+            <button class="logo-btn" onclick="goToIndex()" title="Back to RoomieZ">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/>
+                </svg>
+            </button>
+            <h1 class="header-title">User Settings</h1>
+            <div class="header-actions">
+                <button class="logout-btn" onclick="logout()" title="Logout">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+                        <polyline points="16,17 21,12 16,7"></polyline>
+                        <line x1="21" y1="12" x2="9" y2="12"></line>
+                    </svg>
+                    <span>Logout</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
     <div class="container">
         <!-- Sidebar -->
         <div class="sidebar">
             <div class="sidebar-content">
-                <h1 class="sidebar-title">Configuración</h1>
+                <h1 class="sidebar-title">Settings</h1>
                 <div class="sidebar-item active" data-section="profile">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
                         <circle cx="12" cy="7" r="4"></circle>
                     </svg>
-                    <span>Mi Perfil</span>
+                    <span>My Profile</span>
                 </div>
                 <div class="sidebar-item" data-section="contacts">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path>
                     </svg>
-                    <span>Contactos</span>
+                    <span>Contacts</span>
                 </div>
                 <div class="sidebar-item" data-section="roomz">
                     <svg class="sidebar-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
                         <polyline points="9,22 9,12 15,12 15,22"></polyline>
                     </svg>
-                    <span>Mis RoomZ</span>
+                    <span>My RoomZ</span>
                 </div>
             </div>
         </div>
@@ -40,14 +62,14 @@
             <!-- Loading State -->
             <div id="loading" class="loading">
                 <div class="spinner"></div>
-                <p>Cargando configuración...</p>
+                <p>Loading settings...</p>
             </div>
 
             <!-- Error State -->
             <div id="error" class="error hidden">
-                <h3>Error al cargar la configuración</h3>
+                <h3>Error loading settings</h3>
                 <p id="errorMessage"></p>
-                <button id="retryBtn" class="btn-primary">Reintentar</button>
+                <button id="retryBtn" class="btn-primary">Retry</button>
             </div>
 
             <!-- Content -->
@@ -55,13 +77,13 @@
                 <!-- Profile Section -->
                 <div id="profile-section" class="section active">
                     <div class="section-header">
-                        <h2>Mi Perfil</h2>
+                        <h2>My Profile</h2>
                         <button id="editProfileBtn" class="btn-secondary">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                                 <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                             </svg>
-                            Editar
+                            Edit
                         </button>
                     </div>
 
@@ -119,8 +141,8 @@
 
                             <!-- Edit Actions -->
                             <div id="editActions" class="edit-actions hidden">
-                                <button id="cancelEditBtn" class="btn-cancel">Cancelar</button>
-                                <button id="saveProfileBtn" class="btn-primary">Guardar</button>
+                                                        <button id="cancelEditBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveProfileBtn" class="btn-primary">Save</button>
                             </div>
                         </div>
                     </div>
@@ -129,7 +151,7 @@
                 <!-- Contacts Section -->
                 <div id="contacts-section" class="section hidden">
                     <div class="section-header">
-                        <h2>Información de Contacto</h2>
+                        <h2>Contact Information</h2>
                         <button id="editContactsBtn" class="btn-secondary">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
@@ -142,9 +164,9 @@
                     <div class="contacts-content">
                         <div class="info-grid">
                             <div class="info-field">
-                                <label>Teléfono:</label>
+                                <label>Phone:</label>
                                 <div id="phoneDisplay" class="info-value"></div>
-                                <input aria-label="Teléfono" type="tel" id="phoneInput" class="info-input hidden" placeholder="+57 300 123 4567">
+                                <input aria-label="Phone" type="tel" id="phoneInput" class="info-input hidden" placeholder="+57 300 123 4567">
                             </div>
 
                             <div class="info-field">
@@ -186,8 +208,8 @@
 
                         <!-- Edit Actions -->
                         <div id="editContactsActions" class="edit-actions hidden">
-                            <button id="cancelContactsBtn" class="btn-cancel">Cancelar</button>
-                            <button id="saveContactsBtn" class="btn-primary">Guardar</button>
+                                                    <button id="cancelContactsBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveContactsBtn" class="btn-primary">Save</button>
                         </div>
                     </div>
                 </div>
@@ -195,13 +217,13 @@
                 <!-- RoomZ Section -->
                 <div id="roomz-section" class="section hidden">
                     <div class="section-header">
-                        <h2>Mis RoomZ</h2>
+                        <h2>My RoomZ</h2>
                         <button id="addRoomzBtn" class="btn-secondary">
                             <svg class="btn-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                                 <line x1="12" y1="5" x2="12" y2="19"></line>
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg>
-                            Publicar Nuevo
+                            Publish New
                         </button>
                     </div>
 
@@ -217,7 +239,7 @@
     <div id="roomzModal" class="modal hidden">
         <div class="modal-content">
             <div class="modal-header">
-                <h3 id="modalTitle">Editar RoomZ</h3>
+                                    <h3 id="modalTitle">Edit RoomZ</h3>
                 <button aria-label="cerrar" id="closeModalBtn" class="close-btn">
                     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -227,49 +249,49 @@
             </div>
             <div class="modal-body">
                 <div class="form-field">
-                    <label for="roomzTitle">Título:</label>
-                    <input type="text" id="roomzTitle" placeholder="Título del RoomZ" required>
+                                                <label for="roomzTitle">Title:</label>
+                            <input type="text" id="roomzTitle" placeholder="RoomZ title" required>
                 </div>
                 <div class="form-field">
-                    <label for="roomzSubtitle">Subtítulo:</label>
-                    <input type="text" id="roomzSubtitle" placeholder="Subtítulo descriptivo" required>
+                                                <label for="roomzSubtitle">Subtitle:</label>
+                            <input type="text" id="roomzSubtitle" placeholder="Descriptive subtitle" required>
                 </div>
                 <div class="form-field">
-                    <label for="roomzDetails">Detalles:</label>
-                    <input type="text" id="roomzDetails" placeholder="Servicios incluidos" required>
+                    <label for="roomzDetails">Details:</label>
+                    <input type="text" id="roomzDetails" placeholder="Included services" required>
                 </div>
                 <div class="form-field">
-                    <label for="roomzDescription">Descripción:</label>
-                    <textarea id="roomzDescription" placeholder="Descripción detallada del RoomZ" required></textarea>
+                                                <label for="roomzDescription">Description:</label>
+                            <textarea id="roomzDescription" placeholder="Detailed description of the RoomZ" required></textarea>
                 </div>
                 <div class="form-field">
-                    <label for="roomzAddress">Dirección:</label>
-                    <input type="text" id="roomzAddress" placeholder="Dirección completa" required>
+                                                <label for="roomzAddress">Address:</label>
+                            <input type="text" id="roomzAddress" placeholder="Complete address" required>
                 </div>
                 <div class="form-field">
-                    <label for="roomzPrice">Precio (COP):</label>
+                    <label for="roomzPrice">Price (COP):</label>
                     <input type="number" id="roomzPrice" placeholder="250000" min="0" required>
                 </div>
                 <div class="form-field">
-                    <label for="roomzType">Tipo:</label>
+                    <label for="roomzType">Type:</label>
                     <select id="roomzType" required>
-                        <option value="studio">Estudio</option>
-                        <option value="apartment">Apartamento</option>
-                        <option value="residential_complex">Conjunto Residencial</option>
+                        <option value="studio">Studio</option>
+                        <option value="apartment">Apartment</option>
+                        <option value="residential_complex">Residential Complex</option>
                     </select>
                 </div>
                 <div class="form-field">
-                    <label for="roomzAvailable">Disponible:</label>
+                                                <label for="roomzAvailable">Available:</label>
                     <select id="roomzAvailable" required>
-                        <option value="true">Sí</option>
+                                                        <option value="true">Yes</option>
                         <option value="false">No</option>
                     </select>
                 </div>
             </div>
             <div class="modal-actions">
-                <button id="cancelRoomzBtn" class="btn-cancel">Cancelar</button>
-                <button id="saveRoomzBtn" class="btn-primary">Guardar</button>
-                <button id="deleteRoomzBtn" class="btn-danger hidden">Eliminar</button>
+                                        <button id="cancelRoomzBtn" class="btn-cancel">Cancel</button>
+                        <button id="saveRoomzBtn" class="btn-primary">Save</button>
+                        <button id="deleteRoomzBtn" class="btn-danger hidden">Delete</button>
             </div>
         </div>
     </div>

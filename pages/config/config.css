@@ -1,4 +1,4 @@
-/* Reset y estilos base */
+/* Reset and base styles */
 * {
     margin: 0;
     padding: 0;
@@ -16,21 +16,99 @@ body {
     display: none !important;
 }
 
-/* Container principal */
+/* Header Styles */
+.header {
+    background: white;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    padding: 1rem 2rem;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.logo-btn {
+    background: #49274A;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.logo-btn:hover {
+    background: #3a1f3b;
+    transform: scale(1.05);
+}
+
+.header-title {
+    font-size: 1.5rem;
+    font-weight: 600;
+    color: #49274A;
+    text-align: center;
+    flex: 1;
+    margin: 0 1rem;
+}
+
+.header-actions {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+
+.logout-btn {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 10px 16px;
+    background: transparent;
+    color: #666;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+.logout-btn:hover {
+    background: #f5f5f5;
+    color: #333;
+    border-color: #49274A;
+}
+
+.logout-btn svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Main container */
 .container {
     display: flex;
-    min-height: 100vh;
+    min-height: calc(100vh - 80px); /* Adjust for header */
+    margin-top: 0;
 }
 
 /* Sidebar */
 .sidebar {
     width: 250px;
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    color: white;
+    background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+    color: #333;
     padding: 2rem 0;
-    position: fixed;
-    height: 100vh;
+    height: calc(100vh - 80px);
     overflow-y: auto;
+    flex-shrink: 0;
+    border-right: 1px solid #dee2e6;
 }
 
 .sidebar-content {
@@ -42,6 +120,7 @@ body {
     font-weight: 600;
     margin-bottom: 2rem;
     text-align: center;
+    color: #495057;
 }
 
 .sidebar-item {
@@ -52,7 +131,8 @@ body {
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
-    opacity: 0.8;
+    color: #6c757d;
+    font-weight: 500;
 }
 
 .sidebar-item:hover {
@@ -74,9 +154,9 @@ body {
 /* Contenido principal */
 .main-content {
     flex: 1;
-    margin-left: 250px;
     padding: 2rem;
     background-color: #f8f9fa;
+    overflow-y: auto;
 }
 
 /* Estados de carga y error */
@@ -133,11 +213,12 @@ body {
 
 /* Secciones */
 .section {
-    background: white;
+    background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
     border-radius: 12px;
     padding: 2rem;
     margin-bottom: 2rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
 }
 
 .section-header {
@@ -157,7 +238,7 @@ body {
 
 /* Botones */
 .btn-primary {
-    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    background: #49274A;
     color: white;
     border: none;
     padding: 0.75rem 1.5rem;
@@ -171,14 +252,15 @@ body {
 }
 
 .btn-primary:hover {
+    background: #3a1f3b;
     transform: translateY(-2px);
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+    box-shadow: 0 4px 15px rgba(73, 39, 74, 0.4);
 }
 
 .btn-secondary {
-    background: #f8f9fa;
-    color: #495057;
-    border: 2px solid #dee2e6;
+    background: rgba(255, 255, 255, 0.9);
+    color: #2c3e50;
+    border: 2px solid rgba(255, 255, 255, 0.3);
     padding: 0.75rem 1.5rem;
     border-radius: 8px;
     cursor: pointer;
@@ -190,8 +272,11 @@ body {
 }
 
 .btn-secondary:hover {
-    background: #e9ecef;
-    border-color: #adb5bd;
+    background: white;
+    border-color: white;
+    color: #2c3e50;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(255, 255, 255, 0.3);
 }
 
 .btn-cancel {
@@ -279,7 +364,7 @@ body {
     margin-top: 0.5rem;
 }
 
-/* Información del perfil */
+/* Profile information */
 .info-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -323,14 +408,15 @@ body {
 
 .info-input:focus {
     outline: none;
-    border-color: #667eea;
+    border-color: #3498db;
+    box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
 }
 
 .info-input.hidden {
     display: none;
 }
 
-/* Acciones de edición */
+/* Edit actions */
 .edit-actions {
     display: flex;
     gap: 1rem;
@@ -347,17 +433,18 @@ body {
 }
 
 .roomz-card {
-    background: white;
+    background: linear-gradient(135deg, #ffffff 0%, #f1f2f6 100%);
     border-radius: 12px;
     padding: 1.5rem;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    border: 1px solid #e9ecef;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
+    border-left: 4px solid #27ae60;
     transition: all 0.3s ease;
 }
 
 .roomz-card:hover {
     transform: translateY(-4px);
-    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 8px 25px rgba(39, 174, 96, 0.15);
+    border-left-color: #2ecc71;
 }
 
 .roomz-header {
@@ -430,13 +517,17 @@ body {
 }
 
 .roomz-status.available {
-    background: #d4edda;
-    color: #155724;
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(39, 174, 96, 0.3);
 }
 
 .roomz-status.not-available {
-    background: #f8d7da;
-    color: #721c24;
+    background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+    color: white;
+    font-weight: 600;
+    box-shadow: 0 2px 10px rgba(231, 76, 60, 0.3);
 }
 
 .roomz-actions {
@@ -601,6 +692,23 @@ body {
         width: 100%;
         height: auto;
         position: relative;
+    }
+    
+    .header {
+        padding: 0.75rem 1rem;
+    }
+    
+    .header-title {
+        font-size: 1.25rem;
+    }
+    
+    .logout-btn {
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+    
+    .logout-btn span {
+        display: none;
     }
     
     .main-content {

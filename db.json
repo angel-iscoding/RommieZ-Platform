@@ -1,7 +1,7 @@
 {
     "api_info": {
       "version": "V1",
-      "description": "RommieZ API - Todas las respuestas de ejemplo de los endpoints",
+      "description": "RommieZ API - All endpoint example responses",
       "base_url": "http://localhost:3010/api/V1"
     },
     "endpoints": {
