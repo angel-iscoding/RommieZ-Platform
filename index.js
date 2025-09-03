@@ -369,6 +369,7 @@ function loadSession() {
 function clearSession() {
     localStorage.removeItem('roomieZ_session');
     localStorage.removeItem('roomieZ_userId');
+    localStorage.removeItem('pending_publication_id'); // Clear pending publication
     currentUser = null;
     isAuthenticated = false;
     updateUIForLoggedOutUser();
@@ -634,7 +635,16 @@ function requireAuth(redirectPath = 'index.html') {
 
 // Handle click on publication - GLOBAL FUNCTION
 window.handlePublicationClick = function(publicationId) {
-    // Navigate to details without requiring previous authentication
+    // Check if user is authenticated
+    if (!isAuthenticated || !currentUser) {
+        // Show login modal for unauthenticated users
+        showLoginModal();
+        // Store the publication ID to redirect after login
+        localStorage.setItem('pending_publication_id', publicationId);
+        return;
+    }
+    
+    // Navigate to details for authenticated users
     redirectTo('pages/details/details.html', { id: publicationId });
 };
 
@@ -1030,6 +1040,13 @@ async function handleLoginSubmit(e) {
                 alert(`Welcome back, ${response.data.firstName}!`);
                 hideLoginModal();
                 updateUIForAuthenticatedUser();
+                
+                // Check if there's a pending publication to redirect to
+                const pendingPublicationId = localStorage.getItem('pending_publication_id');
+                if (pendingPublicationId) {
+                    localStorage.removeItem('pending_publication_id');
+                    redirectTo('pages/details/details.html', { id: pendingPublicationId });
+                }
             } else {
                 showLoginError('password', response.message);
             }
@@ -1134,6 +1151,13 @@ async function handleRegisterSubmit(e) {
             alert('Registration successful! Welcome to RoomieZ!');
             hideRegisterModal();
             updateUIForAuthenticatedUser();
+            
+            // Check if there's a pending publication to redirect to
+            const pendingPublicationId = localStorage.getItem('pending_publication_id');
+            if (pendingPublicationId) {
+                localStorage.removeItem('pending_publication_id');
+                redirectTo('pages/details/details.html', { id: pendingPublicationId });
+            }
         } else {
             showRegisterError('registerEmail', response.message);
         }

@@ -1,6 +1,32 @@
 // API settings
 const API_BASE_URL = 'https://roomiez-api-701884280877.europe-west1.run.app/api/V1';
 
+// Authentication guard
+function checkAuthentication() {
+    const sessionData = localStorage.getItem('roomieZ_session');
+    if (!sessionData) {
+        redirectToLogin();
+        return false;
+    }
+    
+    const session = JSON.parse(sessionData);
+    // Verify that the session is not too old (24 hours)
+    if (Date.now() - session.timestamp > 24 * 60 * 60 * 1000) {
+        localStorage.removeItem('roomieZ_session');
+        localStorage.removeItem('roomieZ_userId');
+        redirectToLogin();
+        return false;
+    }
+    
+    return true;
+}
+
+// Redirect to login page
+function redirectToLogin() {
+    alert('Debes iniciar sesión para ver los detalles de esta habitación');
+    window.location.href = '../../index.html';
+}
+
 // Global state of the application
 let currentRoomz = null;
 let currentHost = null;
@@ -47,6 +73,11 @@ document.addEventListener('DOMContentLoaded', function() {
 // Main initialization function
 async function initializePage() {
     try {
+        // Check authentication first
+        if (!checkAuthentication()) {
+            return; // Stop execution if not authenticated
+        }
+        
         showLoading();
         
         // Get the Roomz ID from the URL
