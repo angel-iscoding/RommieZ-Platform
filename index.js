@@ -1,7 +1,7 @@
 // ===== API CONFIGURATION =====
 
 const API_CONFIG = {
-    BASE_URL: 'http://localhost:3010/api/V1',
+    BASE_URL: 'https://roomiez-api-701884280877.europe-west1.run.app/api/V1',
     ENDPOINTS: {
         USERS: '/users',
         CHECK_EMAIL: '/users/check-email',

@@ -27,7 +27,7 @@ document.addEventListener('DOMContentLoaded', function() {
 });
 
 // API Configuration
-const API_BASE_URL = 'http://localhost:3010/api/V1';
+const API_BASE_URL = 'https://roomiez-api-701884280877.europe-west1.run.app/api/V1';
 
 // Global state specific to the configuration page
 let currentContacts = null;
