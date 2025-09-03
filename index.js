@@ -678,7 +678,7 @@ function updateUIForLoggedOutUser() {
     const loginBtn = document.getElementById('loginBtn');
     const logoutBtn = document.getElementById('logoutBtn');
     
-    if (loginBtn && logoutBtn) {
+    if (loginBtn && logoutBtn && !isAuthenticated) {
     loginBtn.textContent = 'Login';
     logoutBtn.style.display = 'none';
     }
@@ -947,13 +947,13 @@ async function handleLoginSubmit(e) {
     if (passwordSection.style.display === 'none') {
         // Validate that the email is not empty
         if (!email) {
-            showLoginError('email', 'El email es requerido');
+            showLoginError('email', 'Email is required');
             return;
         }
 
         // Validate email format
         if (!validateEmail(email)) {
-            showLoginError('email', 'Por favor ingresa un email válido');
+            showLoginError('email', 'Please, send a valid email');
             return;
         }
 
@@ -971,7 +971,6 @@ async function handleLoginSubmit(e) {
                 passwordSection.style.display = 'block';
                 // Add required to the password field when it is shown
                 const passwordInput = document.getElementById('loginPassword');
-                if (passwordInput) passwordInput.setAttribute('required', 'true');
                 submitBtn.textContent = 'Start session';
                 passwordInput.focus();
             } else {
@@ -992,6 +991,21 @@ async function handleLoginSubmit(e) {
     } else {
         // Validate password and login
         const password = document.getElementById('loginPassword').value;
+
+        const response = await checkEmailExists(email);
+
+        if (!response.exists) {
+             // Email not found, open register modal with email pre-filled
+                hideLoginModal();
+                showRegisterModal();
+            // Pre-fill the email in the register form
+            const registerEmailField = document.getElementById('registerEmail');
+            if (registerEmailField) {
+                registerEmailField.value = email;
+            }
+        }
+
+
 
         if (!password) {
             showLoginError('password', 'The password is required');
@@ -1031,15 +1045,17 @@ async function handleLoginSubmit(e) {
 // Handle register form submission
 async function handleRegisterSubmit(e) {
     e.preventDefault();
-    
+
     const formData = {
         firstName: document.getElementById('firstName').value.trim(),
+        middle_name: "",
         lastName: document.getElementById('lastName').value.trim(),
         birthDate: document.getElementById('birthDate').value,
         city: document.getElementById('city').value.trim() || document.getElementById('citySelect').value,
         email: document.getElementById('registerEmail').value.trim(),
         password: document.getElementById('registerPassword').value,
-        confirmPassword: document.getElementById('confirmPassword').value
+        confirmPassword: document.getElementById('confirmPassword').value,
+        role: "student"
     };
     
     const submitBtn = e.target.querySelector('button[type="submit"]');
@@ -1109,6 +1125,7 @@ async function handleRegisterSubmit(e) {
     submitBtn.textContent = 'Creating account...';
 
     try {
+        console.log(formData)
         const response = await registerUser(formData);
         
         if (response.success) {
@@ -1181,3 +1198,5 @@ window.RoomZAPI = {
     redirectTo: redirectTo,
     getUrlParams: getUrlParams
 };
+
+updateUIForLoggedOutUser();
