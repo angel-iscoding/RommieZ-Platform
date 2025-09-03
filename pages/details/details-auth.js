@@ -200,163 +200,28 @@ function saveSession(userData) {
     updateUIForAuthenticatedUser();
 }
 
+// Clear session and redirect to home
+function clearSession() {
+    localStorage.removeItem('roomieZ_session');
+    localStorage.removeItem('roomieZ_userId');
+    localStorage.removeItem('pending_publication_id');
+    currentUser = null;
+    isAuthenticated = false;
+    updateUIForLoggedOutUser();
+    
+    // Redirect to home after logout
+    window.location.href = '../../index.html';
+}
+
 // ===== MODAL UI FUNCTIONS =====
-
-function showLoginModal() {
-    const modal = document.getElementById('loginModal');
-    if (modal) {
-        modal.classList.add('active');
-        resetLoginForm();
-    }
-}
-
-function hideLoginModal() {
-    const modal = document.getElementById('loginModal');
-    if (modal) {
-        modal.classList.remove('active');
-        resetLoginForm();
-    }
-}
-
-function showRegisterModal() {
-    const modal = document.getElementById('registerModal');
-    if (modal) {
-        modal.classList.add('active');
-        resetRegisterForm();
-    }
-}
-
-function hideRegisterModal() {
-    const modal = document.getElementById('registerModal');
-    if (modal) {
-        modal.classList.remove('active');
-        resetRegisterForm();
-    }
-}
+// Login modals removed - not needed in details page
 
 // ===== FORM FUNCTIONS =====
 
-function resetLoginForm() {
-    const emailInput = document.getElementById('loginEmail');
-    const passwordInput = document.getElementById('loginPassword');
-    const passwordSection = document.getElementById('passwordSection');
-    const submitBtn = document.getElementById('loginSubmitBtn');
-    
-    if (emailInput) emailInput.value = '';
-    if (passwordInput) {
-        passwordInput.value = '';
-        passwordInput.removeAttribute('required');
-    }
-    if (passwordSection) passwordSection.style.display = 'none';
-    if (submitBtn) submitBtn.textContent = 'Start session';
-    clearLoginErrors();
-}
-
-function resetRegisterForm() {
-    const firstNameInput = document.getElementById('firstName');
-    const lastNameInput = document.getElementById('lastName');
-    const birthDateInput = document.getElementById('birthDate');
-    const cityInput = document.getElementById('city');
-    const emailInput = document.getElementById('registerEmail');
-    const passwordInput = document.getElementById('registerPassword');
-    
-    if (firstNameInput) firstNameInput.value = '';
-    if (lastNameInput) lastNameInput.value = '';
-    if (birthDateInput) birthDateInput.value = '';
-    if (cityInput) cityInput.value = 'Barranquilla, CO ';
-    if (emailInput) emailInput.value = '';
-    if (passwordInput) passwordInput.value = '';
-    clearRegisterErrors();
-}
-
-function clearLoginErrors() {
-    const emailError = document.getElementById('emailError');
-    const emailSuccess = document.getElementById('emailSuccess');
-    const passwordError = document.getElementById('passwordError');
-    const emailInput = document.querySelector('#loginEmail');
-    const passwordInput = document.querySelector('#loginPassword');
-    
-    if (emailError) emailError.classList.remove('show');
-    if (emailSuccess) emailSuccess.classList.remove('show');
-    if (passwordError) passwordError.classList.remove('show');
-    if (emailInput && emailInput.parentElement) emailInput.parentElement.classList.remove('error', 'success');
-    if (passwordInput && passwordInput.parentElement) passwordInput.parentElement.classList.remove('error');
-}
-
-function clearRegisterErrors() {
-    const errorElements = ['nameError', 'birthDateError', 'cityError', 'registerEmailError', 'registerPasswordError'];
-    errorElements.forEach(id => {
-        const element = document.getElementById(id);
-        if (element) element.classList.remove('show');
-    });
-    
-    const inputElements = ['firstName', 'lastName', 'birthDate', 'city', 'registerEmail', 'registerPassword'];
-    inputElements.forEach(id => {
-        const element = document.getElementById(id);
-        if (element && element.parentElement) element.parentElement.classList.remove('error');
-    });
-}
-
-function showLoginError(field, message) {
-    const errorElement = document.getElementById(`${field}Error`);
-    const inputElement = document.getElementById(field === 'email' ? 'loginEmail' : 'loginPassword');
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.classList.add('show');
-    }
-    if (inputElement && inputElement.parentElement) {
-        inputElement.parentElement.classList.add('error');
-    }
-}
-
-function showEmailSuccess(message) {
-    const successElement = document.getElementById('emailSuccess');
-    const emailInput = document.getElementById('loginEmail');
-    
-    if (successElement) {
-        successElement.textContent = message;
-        successElement.classList.add('show');
-    }
-    if (emailInput && emailInput.parentElement) {
-        emailInput.parentElement.classList.add('success');
-    }
-}
-
-function showRegisterError(field, message) {
-    const errorElement = document.getElementById(`${field}Error`);
-    
-    if (errorElement) {
-        errorElement.textContent = message;
-        errorElement.classList.add('show');
-    }
-    
-    let inputId = field;
-    if (field === 'name') inputId = 'firstName';
-    if (field === 'registerEmail') inputId = 'registerEmail';
-    if (field === 'registerPassword') inputId = 'registerPassword';
-    
-    const inputElement = document.getElementById(inputId);
-    if (inputElement && inputElement.parentElement) {
-        inputElement.parentElement.classList.add('error');
-    }
-}
+// Login form functions removed - not needed in details page
 
 // ===== VALIDATION FUNCTIONS =====
-
-function validateEmail(email) {
-    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    return emailRegex.test(email);
-}
-
-function validateAge(birthDate) {
-    const today = new Date();
-    const birth = new Date(birthDate);
-    const age = today.getFullYear() - birth.getFullYear();
-    const monthDiff = today.getMonth() - birth.getMonth();
-    const actualAge = (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birth.getDate())) ? age - 1 : age;
-    return actualAge >= 18;
-}
+// Login validation functions removed - not needed in details page
 
 // ===== FUNCIONES DE UI PARA AUTENTICACIÓN =====
 
@@ -381,171 +246,7 @@ function updateUIForLoggedOutUser() {
 }
 
 // ===== FORM HANDLING FUNCTIONS =====
-
-async function handleLoginSubmit(e) {
-    e.preventDefault();
-    
-    const email = document.getElementById('loginEmail').value.trim();
-    const passwordSection = document.getElementById('passwordSection');
-    const submitBtn = document.getElementById('loginSubmitBtn');
-    
-    clearLoginErrors();
-
-    if (passwordSection.style.display === 'none') {
-        if (!email) {
-            showLoginError('email', 'Email is required');
-            return;
-        }
-
-        if (!validateEmail(email)) {
-            showLoginError('email', 'Please enter a valid email');
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Verifying...';
-
-        try {
-            const response = await checkEmailExists(email);
-
-            if (response.exists) {
-                showEmailSuccess('Email found! Enter your password');
-                passwordSection.style.display = 'block';
-                // Add required to the password field when it is shown
-                const passwordInput = document.getElementById('loginPassword');
-                if (passwordInput) passwordInput.setAttribute('required', 'true');
-                submitBtn.textContent = 'Start session';
-                passwordInput.focus();
-            } else {
-                hideLoginModal();
-                showRegisterModal();
-                // Pre-fill the email in the registration form
-                const registerEmailField = document.getElementById('registerEmail');
-                if (registerEmailField) {
-                    registerEmailField.value = email;
-                }
-            }
-        } catch (error) {
-            showLoginError('email', 'Error verifying email. Please try again.');
-        } finally {
-            submitBtn.disabled = false;
-        }
-    } else {
-        const password = document.getElementById('loginPassword').value;
-
-        if (!password) {
-            showLoginError('password', 'Password is required');
-            return;
-        }
-
-        if (password.length < 8) {
-            showLoginError('password', 'Password must have at least 8 characters');
-            return;
-        }
-
-        submitBtn.disabled = true;
-        submitBtn.textContent = 'Starting session...';
-
-        try {
-            const response = await loginUser(email, password);
-            
-            if (response.success) {
-                saveSession(response.data);
-                alert(`Welcome back, ${response.data.firstName}!`);
-                hideLoginModal();
-                updateUIForAuthenticatedUser();
-            } else {
-                showLoginError('password', response.message);
-            }
-        } catch (error) {
-            showLoginError('password', 'Error starting session. Please try again.');
-        } finally {
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Sign In';
-        }
-    }
-}
-
-async function handleRegisterSubmit(e) {
-    e.preventDefault();
-    
-    const formData = {
-        firstName: document.getElementById('firstName').value.trim(),
-        lastName: document.getElementById('lastName').value.trim(),
-        birthDate: document.getElementById('birthDate').value,
-        city: document.getElementById('city').value.trim(),
-        email: document.getElementById('registerEmail').value.trim(),
-        password: document.getElementById('registerPassword').value
-    };
-    
-    const submitBtn = e.target.querySelector('button[type="submit"]');
-    
-    clearRegisterErrors();
-
-    let hasErrors = false;
-
-    if (!formData.firstName) {
-        showRegisterError('name', 'Name is required');
-        hasErrors = true;
-    }
-
-    if (!formData.lastName) {
-        showRegisterError('name', 'Last name is required');
-        hasErrors = true;
-    }
-
-    if (!formData.birthDate) {
-        showRegisterError('birthDate', 'Date of birth is required');
-        hasErrors = true;
-    } else if (!validateAge(formData.birthDate)) {
-        showRegisterError('birthDate', 'You must be at least 18 years old to register');
-        hasErrors = true;
-    }
-
-    if (!formData.city) {
-        showRegisterError('city', 'City is required');
-        hasErrors = true;
-    }
-
-    if (!formData.email) {
-        showRegisterError('registerEmail', 'Email is required');
-        hasErrors = true;
-    } else if (!validateEmail(formData.email)) {
-        showRegisterError('registerEmail', 'Please enter a valid email');
-        hasErrors = true;
-    }
-
-    if (!formData.password) {
-        showRegisterError('registerPassword', 'Password is required');
-        hasErrors = true;
-    } else if (formData.password.length < 8) {
-        showRegisterError('registerPassword', 'Password must have at least 8 characters');
-        hasErrors = true;
-    }
-
-    if (hasErrors) return;
-
-    submitBtn.disabled = true;
-    submitBtn.textContent = 'Creating account...';
-
-    try {
-        const response = await registerUser(formData);
-        
-        if (response.success) {
-            saveSession(response.data);
-            alert('Registration successful! Welcome to RoomieZ!');
-            hideRegisterModal();
-            updateUIForAuthenticatedUser();
-        } else {
-            showRegisterError('registerEmail', response.message);
-        }
-    } catch (error) {
-        alert('Error in registration. Please try again.');
-    } finally {
-        submitBtn.disabled = false;
-        submitBtn.textContent = 'Register';
-    }
-}
+// Login form handling functions removed - not needed in details page
 
 // ===== INITIALIZATION OF EVENT LISTENERS =====
 
@@ -573,17 +274,7 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    if (loginBtn) {
-        loginBtn.addEventListener('click', function() {
-            const dropdown = document.getElementById('dropdownMenu');
-            if (dropdown) dropdown.classList.remove('active');
-            if (isAuthenticated) {
-                alert(`You are connected as ${currentUser.firstName} ${currentUser.lastName}`);
-            } else {
-                showLoginModal();
-            }
-        });
-    }
+    // Login button removed - not needed in details page
 
     if (configBtn) {
         configBtn.addEventListener('click', function() {
@@ -604,55 +295,12 @@ document.addEventListener('DOMContentLoaded', function() {
             if (dropdown) dropdown.classList.remove('active');
             if (confirm('Are you sure you want to close session?')) {
                 clearSession();
-                updateUIForLoggedOutUser();
-                alert('Session closed successfully');
+                // clearSession will redirect to home automatically
             }
         });
     }
 
-    // Event listeners for modals
-    const closeLoginBtn = document.getElementById('closeLoginModal');
-    const closeRegisterBtn = document.getElementById('closeRegisterModal');
-    const switchToRegisterBtn = document.getElementById('switchToRegister');
-    const switchToLoginBtn = document.getElementById('switchToLogin');
-    const loginModal = document.getElementById('loginModal');
-    const registerModal = document.getElementById('registerModal');
-
-    if (closeLoginBtn) closeLoginBtn.addEventListener('click', hideLoginModal);
-    if (closeRegisterBtn) closeRegisterBtn.addEventListener('click', hideRegisterModal);
-
-    if (switchToRegisterBtn) {
-        switchToRegisterBtn.addEventListener('click', function() {
-            hideLoginModal();
-            showRegisterModal();
-        });
-    }
-
-    if (switchToLoginBtn) {
-        switchToLoginBtn.addEventListener('click', function() {
-            hideRegisterModal();
-            showLoginModal();
-        });
-    }
-
-    if (loginModal) {
-        loginModal.addEventListener('click', function(e) {
-            if (e.target === this) hideLoginModal();
-        });
-    }
-
-    if (registerModal) {
-        registerModal.addEventListener('click', function(e) {
-            if (e.target === this) hideRegisterModal();
-        });
-    }
-
-    // Event listeners for forms
-    const loginForm = document.getElementById('loginForm');
-    const registerForm = document.getElementById('registerForm');
-
-    if (loginForm) loginForm.addEventListener('submit', handleLoginSubmit);
-    if (registerForm) registerForm.addEventListener('submit', handleRegisterSubmit);
+    // Login modals and forms removed - not needed in details page
 
     // Close dropdowns when clicking outside
     document.addEventListener('click', function(e) {

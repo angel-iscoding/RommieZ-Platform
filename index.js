@@ -373,6 +373,9 @@ function clearSession() {
     currentUser = null;
     isAuthenticated = false;
     updateUIForLoggedOutUser();
+    
+    // Redirect to home after logout
+    window.location.href = 'index.html';
 }
 
     // ===== VALIDATION FUNCTIONS =====
